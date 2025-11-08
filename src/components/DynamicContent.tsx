@@ -75,7 +75,7 @@ export default function DynamicContent({ allNotes }: { allNotes: MarkdownInstanc
 
     if (activeNote) {
         return (
-            <article className="prose lg:prose-xl max-w-none">
+            <article className="prose prose-slate lg:prose-l max-w-5xl mx-auto">
                 <button onClick={handleBackClick} className="mb-8 text-indigo-600 hover:underline">
                     &larr; Back to Home
                 </button>
@@ -88,7 +88,7 @@ export default function DynamicContent({ allNotes }: { allNotes: MarkdownInstanc
     }
 
     return (
-        <div>
+        <div className="max-w-7xl mx-auto">
             <div className="text-center border-b pb-8 mb-8 border-gray-200">
                 <h1 className="text-4xl font-bold text-gray-900">Welcome to your Knowledge Base</h1>
                 <p className="mt-2 text-lg text-gray-500">Select a note from the sidebar or find one below to get started.</p>
