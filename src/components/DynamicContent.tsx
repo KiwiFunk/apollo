@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 
-// Define the shape of note and frontmatter data
+// Define shape of note and frontmatter data
 interface Frontmatter {
     title: string;
     description: string;
@@ -21,28 +21,6 @@ interface LoadedNote {
 export default function DynamicContent({ allNotes }: { allNotes: Note[] }) {
     const [activeNote, setActiveNote] = useState<LoadedNote | null>(null);
 
-    const handlePopState = () => {
-        const slug = window.location.pathname.split('/').pop();
-        if (slug && window.location.pathname.startsWith('/notes/')) {
-            loadNote(slug);
-        } else {
-            setActiveNote(null);
-        }
-    };
-
-    useEffect(() => {
-        // Listen to browser navigation events
-        window.addEventListener('popstate', handlePopState);
-        // Set up initial listeners for all note links
-        addNoteLinkListeners();
-        // Check initial URL on load
-        handlePopState();
-
-        return () => {
-            window.removeEventListener('popstate', handlePopState);
-        };
-    }, []);
-
     const loadNote = async (slug: string) => {
         try {
             const response = await fetch(`/api/notes/${slug}`);
@@ -51,17 +29,17 @@ export default function DynamicContent({ allNotes }: { allNotes: Note[] }) {
             setActiveNote(noteData);
         } catch (error) {
             console.error('Failed to load note:', error);
-            // You could set an error state here to display a message
         }
     };
 
-    const handleLinkClick = (event: MouseEvent) => {
-        event.preventDefault();
+    const handleLinkClick = (event: Event) => {
+        event.preventDefault(); // Prevent default page reload behavior
         const link = event.currentTarget as HTMLAnchorElement;
         const url = new URL(link.href);
         const slug = url.pathname.split('/').pop();
 
         if (slug) {
+            // Update the browser's URL without a full navigation
             history.pushState({ slug }, '', url.pathname);
             loadNote(slug);
         }
@@ -72,13 +50,39 @@ export default function DynamicContent({ allNotes }: { allNotes: Note[] }) {
         setActiveNote(null);
     };
 
-    // Ensures that links rendered by Astro are also interactive
-    function addNoteLinkListeners() {
-        document.querySelectorAll('aside a, a.note-link').forEach(link => {
-            // cast to any to avoid conflicts with the event listener type
-            (link as any).onClick = handleLinkClick;
+    // useEffect hook runs once when the component "hydrates" in the browser.
+    // Set up listeners for external elements.
+    useEffect(() => {
+        // Function to handle browser back/forward navigation
+        const handlePopState = () => {
+            const slug = window.location.pathname.split('/').pop();
+            if (slug && window.location.pathname.startsWith('/notes/')) {
+                loadNote(slug);
+            } else {
+                setActiveNote(null);
+            }
+        };
+
+        // Find all links in the static sidebar and attach click handler
+        const sidebarLinks = document.querySelectorAll('aside a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', handleLinkClick);
         });
-    }
+
+        // Listen for popstate events (back/forward buttons)
+        window.addEventListener('popstate', handlePopState);
+
+        // Check the URL when the page first loads to handle deep links
+        handlePopState();
+
+        // Handle cleanup on component remove
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+            sidebarLinks.forEach(link => {
+                link.removeEventListener('click', handleLinkClick);
+            });
+        };
+    }, []); // Empty array means effect runs only once on mount.
 
     if (activeNote) {
         return (
@@ -104,7 +108,7 @@ export default function DynamicContent({ allNotes }: { allNotes: Note[] }) {
                 {allNotes.map((note) => (
                     <a
                         href={`/notes/${note.file.split("/").pop()?.replace(".md", "")}`}
-                        onClick={handleLinkClick}
+                        onClick={handleLinkClick} // Links inside Preact use the onClick prop directly
                         className="note-link block p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200"
                     >
                         <h3 className="text-xl font-semibold text-gray-900">{note.frontmatter.title}</h3>
