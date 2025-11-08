@@ -78,7 +78,6 @@ const notesByCategory = allNotes.reduce((acc, note) => {
                                 <ul class="mt-2 ml-2 space-y-2 border-l border-gray-300">
                                     {notes.map(note => (
                                         <li>
-                                            {/* Use the 'note.url' property provided by Astro for more reliable links */}
                                             <a href={note.url} class="block pl-4 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-r-lg py-1 transition-colors">
                                                 {note.frontmatter.title}
                                             </a>
@@ -93,7 +92,7 @@ const notesByCategory = allNotes.reduce((acc, note) => {
 
             <!-- Homepage / Note Display Window -->
             <main class="flex-1 p-12 overflow-y-auto">
-                <DynamicContent client:load allNotes={allNotes} />
+                <DynamicContent client:idle allNotes={allNotes} />
             </main>
         </div>
     </div>
