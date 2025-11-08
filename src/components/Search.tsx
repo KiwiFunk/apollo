@@ -36,7 +36,7 @@ export default function Search({ searchList }: Props) {
     return new Fuse(searchList, options);
   }, [searchList]);
 
-  // useEffect to listen for clear-search event
+  // useEffect to listen for clear-search event (useEffect means we only create one listener on component mount)
   useEffect(() => {
     const handleClearSearch = () => {
       setQuery('');
