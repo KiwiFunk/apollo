@@ -1,5 +1,5 @@
 ---
-import MainContent from "../components/MainContent.astro";
+import DynamicContent from "../components/DynamicContent.tsx";
 import "../styles/global.css";
 
 // Get all notes
@@ -81,7 +81,7 @@ const notesByCategory = allNotes.reduce((acc, note) => {
 
             <!-- Homepage / Note Display Window -->
             <main class="flex-1 p-8 overflow-y-auto">
-                <MainContent allNotes={allNotes} notesByCategory={notesByCategory} />
+                <DynamicContent client:load allNotes={allNotes} />
             </main>
         </div>
     </div>
