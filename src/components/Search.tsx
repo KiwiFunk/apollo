@@ -36,6 +36,21 @@ export default function Search({ searchList }: Props) {
     return new Fuse(searchList, options);
   }, [searchList]);
 
+  // useEffect to listen for clear-search event
+  useEffect(() => {
+    const handleClearSearch = () => {
+      setQuery('');
+      setResults([]);
+    };
+
+    window.addEventListener('clear-search', handleClearSearch);
+
+    // Cleanup event listener when the component unmounts
+    return () => {
+      window.removeEventListener('clear-search', handleClearSearch);
+    };
+  }, []); // Empty dependency array means this runs only once
+
   // Debounce the search input to avoid searching on every single keystroke
   useEffect(() => {
     const handler = setTimeout(() => {
