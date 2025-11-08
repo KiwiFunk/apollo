@@ -9,6 +9,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.15.4"
+    "@astrojs/mdx": "^4.3.10",
+    "@astrojs/node": "^9.5.0",
+    "astro": "^5.15.4",
+    "dotenv": "^17.2.3",
+    "gray-matter": "^4.0.3",
+    "marked": "^17.0.0",
+    "pg": "^8.16.3"
   }
 }
