@@ -7,6 +7,12 @@ interface LoadedNote {
     htmlContent: string;
 }
 
+// Dispatch an event to notify of content changes
+const dispatchClearSearch = () => {
+    const event = new CustomEvent('clear-search');
+    window.dispatchEvent(event);
+};
+
 export default function DynamicContent({ allNotes }: { allNotes: MarkdownInstance<Frontmatter>[] }) {
     const [activeNote, setActiveNote] = useState<LoadedNote | null>(null);
 
@@ -16,13 +22,14 @@ export default function DynamicContent({ allNotes }: { allNotes: MarkdownInstanc
             if (!response.ok) throw new Error('Note not found');
             const noteData: LoadedNote = await response.json();
             setActiveNote(noteData);
+            dispatchClearSearch();      // Clear search when a note is loaded
         } catch (error) {
             console.error('Failed to load note:', error);
         }
     };
 
     const handleLinkClick = (event: Event) => {
-        event.preventDefault(); // Prevent default page reload behavior
+        event.preventDefault();         // Prevent default page reload behavior
         const link = event.currentTarget as HTMLAnchorElement;
         const url = new URL(link.href);
         const slug = url.pathname.split('/').pop();
@@ -37,6 +44,7 @@ export default function DynamicContent({ allNotes }: { allNotes: MarkdownInstanc
     const handleBackClick = () => {
         history.pushState(null, '', '/');
         setActiveNote(null);
+        dispatchClearSearch();          // Clear search when navigating back
     };
 
     // useEffect hook runs once when the component "hydrates" in the browser.
@@ -49,6 +57,7 @@ export default function DynamicContent({ allNotes }: { allNotes: MarkdownInstanc
                 loadNote(slug);
             } else {
                 setActiveNote(null);
+                dispatchClearSearch();  // Clear search when navigating back
             }
         };
 
