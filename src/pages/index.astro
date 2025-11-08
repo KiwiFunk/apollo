@@ -1,28 +1,101 @@
 ---
-const notes = await Astro.glob('../notes/*.md');
 import "../styles/global.css";
+
+// Get all notes
+const allNotes = await Astro.glob('../notes/*.md');
+
+// Group Notes by Category
+const notesByCategory = allNotes.reduce((acc, note) => {
+    const category = note.frontmatter.category || 'Uncategorized';
+    if (!acc[category]) {
+        acc[category] = [];
+    }
+    acc[category].push(note);
+    return acc;
+}, {} as Record<string, typeof allNotes>);
 ---
 
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <meta name="viewport" content="width=device-width" />
-        <meta name="generator" content={Astro.generator} />
-        <title>Knowledge Base</title>
-    </head>
-    <body>
-        <h1 class="text-3xl font-bold underline">Knowledge Base</h1>
-        <p>Here are your notes:</p>
-        <ul>
-            {notes.map(note => (
-                <li>
-                    <a href={`/notes/${note.file.split('/').pop()?.replace('.md', '')}`}>
-                        {note.frontmatter.title}
-                    </a>
-                    <p>{note.frontmatter.description}</p>
-                </li>
-            ))}
-        </ul>
-    </body>
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Apollo Knowledge Base</title>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <div class="flex flex-col h-screen">
+        <!-- Navbar -->
+        <nav class="bg-white border-b border-gray-200 w-full shrink-0 shadow-sm">
+            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <!-- Branding -->
+                    <div class="shrink-0">
+                        <span class="text-2xl font-bold text-gray-900">apollo</span>
+                    </div>
+
+                    <!-- Centered Search Bar -->
+                    <div class="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-center">
+                        <div class="max-w-md w-full lg:max-w-xl">
+                            <label for="search" class="sr-only">Search</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <input id="search" name="search" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Search notes..." type="search">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-24"></div> <!-- Spacer to balance branding -->
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Categories Sidebar -->
+            <aside class="w-72 bg-gray-50 border-r border-gray-200 overflow-y-auto p-6">
+                <h2 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Categories</h2>
+                <nav class="mt-4">
+                    <ul class="space-y-4">
+                        {Object.entries(notesByCategory).map(([category, notes]) => (
+                            <li>
+                                <h3 class="font-semibold text-gray-900">{category}</h3>
+                                <ul class="mt-2 ml-2 space-y-2 border-l border-gray-300">
+                                    {notes.map(note => (
+                                        <li>
+                                            <a href={`/notes/${note.file.split('/').pop()?.replace('.md', '')}`} class="block pl-4 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-r-lg py-1 transition-colors">
+                                                {note.frontmatter.title}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Homepage / Note Display Window -->
+            <main class="flex-1 p-8 overflow-y-auto">
+                <div class="text-center border-b pb-8 mb-8 border-gray-200">
+                    <h1 class="text-4xl font-bold text-gray-900">Welcome to your Knowledge Base</h1>
+                    <p class="mt-2 text-lg text-gray-500">Select a note from the sidebar or find one below to get started.</p>
+                </div>
+
+                <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    {allNotes.map(note => (
+                        <a href={`/notes/${note.file.split('/').pop()?.replace('.md', '')}`} class="block p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+                            <h3 class="text-xl font-semibold text-gray-900">{note.frontmatter.title}</h3>
+                            <p class="mt-2 text-gray-600 line-clamp-3">{note.frontmatter.description}</p>
+                            <span class="mt-4 inline-block text-sm font-medium text-indigo-600">Read more &rarr;</span>
+                        </a>
+                    ))}
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
 </html>
