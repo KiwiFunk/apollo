@@ -1,0 +1,94 @@
+import { useState, useMemo, useEffect } from 'preact/hooks';
+import Fuse from 'fuse.js';
+import type { MarkdownInstance } from 'astro';
+import type { Frontmatter } from '../types';
+
+// Define the shape of the data to search
+type SearchItem = {
+  title: string;
+  description: string;
+  category: string;
+  slug: string;
+  content: string; // Raw markdown content
+};
+
+// Define props the component will receive
+interface Props {
+  searchList: SearchItem[];
+}
+
+export default function Search({ searchList }: Props) {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<Fuse.FuseResult<SearchItem>[]>([]);
+
+  // Fuse.js Configuration
+  const fuse = useMemo(() => {
+    const options: Fuse.IFuseOptions<SearchItem> = {
+      keys: [
+        { name: 'title', weight: 2 },       // Give title matches more weight
+        { name: 'description', weight: 1 },
+        { name: 'content', weight: 0.5 },   // Give full content matches less weight
+      ],
+      includeMatches: true,                 // This is useful for highlighting matches
+      minMatchCharLength: 2,
+      threshold: 0.4,                       // Adjust this for more/less fuzzy matches (0=perfect, 1=anything)
+    };
+    return new Fuse(searchList, options);
+  }, [searchList]);
+
+  // Debounce the search input to avoid searching on every single keystroke
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (query.length > 1) {
+        const searchResults = fuse.search(query);
+        setResults(searchResults);
+      } else {
+        setResults([]);
+      }
+    }, 200); // Wait 200ms after the user stops typing
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [query, fuse]);
+
+  return (
+    <div class="relative">
+      <input
+        id="search"
+        name="search"
+        type="search"
+        value={query}
+        onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
+        placeholder="Search notes..."
+        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      />
+      
+      {/* Search Results Dropdown */}
+      {query.length > 1 && (
+        <div class="absolute mt-2 w-full max-h-96 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg z-10">
+          {results.length > 0 ? (
+            <ul>
+              {results.map(({ item }) => (
+                <li key={item.slug}>
+                  <a href={`/notes/${item.slug}`} class="block p-4 hover:bg-indigo-50 transition-colors">
+                    <div class="flex justify-between items-center">
+                      <span class="font-semibold text-gray-800">{item.title}</span>
+                      {/* The category visualization! */}
+                      <span class="text-xs font-medium text-indigo-600 bg-indigo-100 px-2 py-1 rounded-full">
+                        {item.category}
+                      </span>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-1">{item.description}</p>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div class="p-4 text-center text-gray-500">No results found.</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
