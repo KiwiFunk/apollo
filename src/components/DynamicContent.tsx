@@ -1,24 +1,13 @@
 import { useState, useEffect } from 'preact/hooks';
-
-// Define shape of note and frontmatter data
-interface Frontmatter {
-    title: string;
-    description: string;
-    publishDate: string;
-    category?: string;
-}
-
-interface Note {
-    file: string;
-    frontmatter: Frontmatter;
-}
+import type { MarkdownInstance } from 'astro'; 
+import type { Frontmatter } from '../types';
 
 interface LoadedNote {
     frontmatter: Frontmatter;
     htmlContent: string;
 }
 
-export default function DynamicContent({ allNotes }: { allNotes: Note[] }) {
+export default function DynamicContent({ allNotes }: { allNotes: MarkdownInstance<Frontmatter>[] }) {
     const [activeNote, setActiveNote] = useState<LoadedNote | null>(null);
 
     const loadNote = async (slug: string) => {
