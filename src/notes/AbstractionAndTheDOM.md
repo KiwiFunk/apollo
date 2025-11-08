@@ -1,5 +1,5 @@
 ---
-title: "Absraction And The DOM"
+title: "Abstraction And The DOM"
 description: "Why do we make use of Libraries like React to abstract the DOM?"
 publishDate: "2025-11-08"
 category: "Web Fundamentals"
