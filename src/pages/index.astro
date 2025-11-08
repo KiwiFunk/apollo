@@ -4,7 +4,16 @@ import type { Frontmatter } from "../types"; // Import the Frontmatter type
 import type { MarkdownInstance } from 'astro'; // Import Astro's MarkdownInstance type
 import "../styles/global.css";
 
-const allNotes = Object.values(import.meta.glob('../notes/*.md', { eager: true })) as MarkdownInstance<Frontmatter>[];
+// Fetch All Markdown Notes
+const notesImport = Object.values(import.meta.glob('../notes/*.md', { eager: true })) as MarkdownInstance<Frontmatter>[];
+
+// Normalize Data - Spread frontmatter and add URL property (With SSR, note.url will be undefined)
+const allNotes = notesImport.map((note) => {
+	return {
+		...note,
+		url: `/notes/${note.file.split('/').pop()?.replace('.md', '')}`
+	};
+});
 
 // Group Notes by Category
 const notesByCategory = allNotes.reduce((acc, note) => {
