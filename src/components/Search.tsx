@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'preact/hooks';
-import Fuse from 'fuse.js';
+import Fuse, { type FuseResult, type IFuseOptions } from 'fuse.js';
 import type { MarkdownInstance } from 'astro';
 import type { Frontmatter } from '../types';
 
@@ -19,11 +19,11 @@ interface Props {
 
 export default function Search({ searchList }: Props) {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<Fuse.FuseResult<SearchItem>[]>([]);
+  const [results, setResults] = useState<FuseResult<SearchItem>[]>([]);
 
   // Fuse.js Configuration
   const fuse = useMemo(() => {
-    const options: Fuse.IFuseOptions<SearchItem> = {
+    const options: IFuseOptions<SearchItem> = {
       keys: [
         { name: 'title', weight: 2 },       // Give title matches more weight
         { name: 'description', weight: 1 },
