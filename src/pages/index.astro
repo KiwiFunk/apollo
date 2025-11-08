@@ -1,16 +1,27 @@
 ---
-
+const notes = await Astro.glob('../notes/*.md');
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>Knowledge Base</title>
+    </head>
+    <body>
+        <h1>Knowledge Base</h1>
+        <p>Here are your notes:</p>
+        <ul>
+            {notes.map(note => (
+                <li>
+                    <a href={`/notes/${note.file.split('/').pop()?.replace('.md', '')}`}>
+                        {note.frontmatter.title}
+                    </a>
+                    <p>{note.frontmatter.description}</p>
+                </li>
+            ))}
+        </ul>
+    </body>
 </html>
