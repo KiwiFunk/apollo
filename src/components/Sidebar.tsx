@@ -1,9 +1,54 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
+import CollapsibleContainer from '../CollapsibleContainer.tsx';
 
-export default function Sidebar({ children }: { children: any }) {
+interface SortableCategory {
+  name: string;
+  notes: any[];
+  lastUpdated: number;
+}
+
+export default function Sidebar({ notesByCategory }: Props) {
+
+  // Store transformed array of categories
+  const [categories, setCategories] = useState<SortableCategory[]>([]);
+
+  // Current Sorted Items for Rendering
+  const [sortedCategories, setSortedCategories] = useState<SortableCategory[]>([]);
+  const [sortType, setSortType] = useState('alphaAsc');
+
+  // States for sidebar open/close
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement | null>(null); // Create a ref for the aside element
 
+  // Transform notesByCategory object into an array for easier sorting
+  useEffect(() => {
+    const sortableData = Object.entries(notesByCategory).map(([name, notes]) => {
+      // Calculate a timestamp using the publishDate field
+      const lastUpdated = Math.max(
+        ...notes.map(note => new Date(note.frontmatter.publishDate).getTime())
+      );
+      return { name, notes, lastUpdated };
+    });
+    setCategories(sortableData);
+  }, [notesByCategory]); // Only run if prop changes
+
+  // Run whenever sortType  or base data changes
+  useEffect(() => {
+    const sorted = [...categories].sort((a, b) => {
+      switch (sortType) {
+        case 'alphaDesc':
+          return b.name.localeCompare(a.name);
+        case 'recent':
+          return b.lastUpdated - a.lastUpdated;
+        case 'alphaAsc':
+        default:
+          return a.name.localeCompare(b.name);
+      }
+    });
+    setSortedCategories(sorted);
+  }, [sortType, categories]); // Re-sort when sortType or the underlying data changes
+
+  // Handle Burger Menu Toggle Event
   const handleToggle = () => {
     setIsOpen(prev => !prev);
   };
@@ -38,6 +83,20 @@ export default function Sidebar({ children }: { children: any }) {
     }
   }, [isOpen]);
 
+  // NEW: Function to cycle through sort types
+  const cycleSortType = () => {
+    if (sortType === 'alphaAsc') setSortType('alphaDesc');
+    else if (sortType === 'alphaDesc') setSortType('recent');
+    else setSortType('alphaAsc');
+  };
+
+  // NEW: Helper to get the current sort icon
+  const getSortIcon = () => {
+    if (sortType === 'alphaAsc') return 'A-Z';
+    if (sortType === 'alphaDesc') return 'Z-A';
+    return 'Recent'; // Or an icon for a clock
+  };
+
   return (
     <>
       <aside
@@ -50,7 +109,32 @@ export default function Sidebar({ children }: { children: any }) {
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         ].join(' ')}
       >
-        {children}
+        {/* Sidebar Controls/Header */}
+        <div class="flex items-center justify-between">
+          <h2 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Categories</h2>
+          
+          <button 
+            onClick={cycleSortType} 
+            class="text-xs font-semibold text-gray-600 uppercase tracking-wider px-2 py-1 rounded hover:bg-gray-200"
+            aria-label={`Sort by ${sortType}`}
+          >
+            {getSortIcon()}
+          </button>
+
+        </div>
+
+        {/* Map through sortedCategories */}
+        <ul class="space-y-1 mt-2 mb-24 lg:mb-12">
+            {sortedCategories.map(({ name, notes }) => (
+                <CollapsibleContainer 
+                    client:load 
+                    key={name}
+                    category={name} 
+                    notes={notes} 
+                />
+            ))}
+        </ul>
+
       </aside>
 
       {/* Use an invisible overlay to capture clicks outside the sidebar */}
