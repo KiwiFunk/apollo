@@ -7,6 +7,7 @@ import DynamicContent from "../components/DynamicContent.tsx";
 import BurgerButton from '../components/BurgerButton.tsx';
 import Sidebar from '../components/Sidebar.tsx';
 import pg from 'pg';
+import type { DbNote, AppNote } from '../types';    
 
 const { Pool } = pg;
 // Use import.meta.env to access environment var in Astro
@@ -16,7 +17,7 @@ const pool = new Pool({ connectionString: import.meta.env.DATABASE_URL });
 const { rows: dbNotes } = await pool.query('SELECT slug, title, description, publish_date, category, content FROM notes ORDER BY publish_date DESC');
 
 // Normalize data to match the structure our components expect
-const allNotes = dbNotes.map(note => ({
+const allNotes: AppNote[] = (dbNotes as DbNote[]).map((note: DbNote) => ({
     url: `/notes/${note.slug}`,
     frontmatter: {
         title: note.title,
@@ -30,9 +31,9 @@ const allNotes = dbNotes.map(note => ({
 }));
 
 // Prepare Search List using flatMap to ensure all items have a valid slug
-const searchList = allNotes.flatMap(note => {
-  const slug = note.file.split('/').pop()?.replace('.md', '');
-  
+const searchList = allNotes.flatMap((note: AppNote) => {
+  const slug = note.url.split('/').pop();
+
   // If !slug, filter this item out by returning an empty array
   if (!slug) return [];
 
@@ -40,14 +41,14 @@ const searchList = allNotes.flatMap(note => {
   return [{
     title: note.frontmatter.title,
     description: note.frontmatter.description,
-    category: note.frontmatter.category,
+    category: note.frontmatter.category || 'Uncategorized',
     slug: slug,
     content: note.rawContent(),
   }];
 });
 
 // Group Notes by Category
-const notesByCategory = allNotes.reduce((acc, note) => {
+const notesByCategory = allNotes.reduce((acc: Record<string, AppNote[]>, note: AppNote) => {
     const category = note.frontmatter.category || 'Uncategorized';
     if (!acc[category]) {
         acc[category] = [];
@@ -55,7 +56,7 @@ const notesByCategory = allNotes.reduce((acc, note) => {
     acc[category].push(note);
     // Ensure the accumulator type matches the type of 'allNotes'
     return acc;
-}, {} as Record<string, MarkdownInstance<Frontmatter>[]>);
+}, {});
 ---
 
 <html lang="en">

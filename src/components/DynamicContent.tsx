@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 import type { MarkdownInstance } from 'astro'; 
-import type { Frontmatter } from '../types';
+import type { Frontmatter, AppNote } from '../types';
 import HomePage from './HomePage';
 
 interface LoadedNote {
@@ -14,7 +14,7 @@ const dispatchClearSearch = () => {
     window.dispatchEvent(event);
 };
 
-export default function DynamicContent({ allNotes, notesByCategory }: { allNotes: MarkdownInstance<Frontmatter>[]; notesByCategory: Record<string, any[]> }) {
+export default function DynamicContent({ allNotes, notesByCategory }: { allNotes: AppNote[], notesByCategory: Record<string, AppNote[]> }) {
     const [activeNote, setActiveNote] = useState<LoadedNote | null>(null);
 
     const loadNote = async (slug: string) => {
