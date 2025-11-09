@@ -14,7 +14,7 @@ const dispatchClearSearch = () => {
     window.dispatchEvent(event);
 };
 
-export default function DynamicContent({ allNotes }: { allNotes: MarkdownInstance<Frontmatter>[] }) {
+export default function DynamicContent({ allNotes, notesByCategory }: { allNotes: MarkdownInstance<Frontmatter>[]; notesByCategory: Record<string, any[]> }) {
     const [activeNote, setActiveNote] = useState<LoadedNote | null>(null);
 
     const loadNote = async (slug: string) => {
@@ -98,6 +98,6 @@ export default function DynamicContent({ allNotes }: { allNotes: MarkdownInstanc
     }
 
     return (
-        <HomePage allNotes={allNotes} handleLinkClick={handleLinkClick} />
+        <HomePage allNotes={allNotes} notesByCategory={notesByCategory} handleLinkClick={handleLinkClick} />
     );
 }

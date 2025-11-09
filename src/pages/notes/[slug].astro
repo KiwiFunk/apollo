@@ -1,11 +1,6 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
-import DynamicContent from "../../components/DynamicContent.tsx";
-import type { Frontmatter } from "../../types";
-
-const allNotes = await Astro.glob<Frontmatter>('../../notes/*.md');
 ---
 <MainLayout>
-    <!-- Populate <slot /> -->
-    <DynamicContent client:idle allNotes={allNotes} />
+    <!-- Populate <slot /> if needed -->
 </MainLayout>

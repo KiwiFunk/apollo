@@ -4,6 +4,7 @@ import type { Frontmatter } from '../types';
 // Define the props the component will accept
 interface Props {
   allNotes: MarkdownInstance<Frontmatter>[];
+  notesByCategory: Record<string, any[]>;
   handleLinkClick: (event: Event) => void;
 }
 
@@ -20,8 +21,20 @@ const NoteCard = ({ note, handleLinkClick }: { note: MarkdownInstance<Frontmatte
     </a>
 );
 
+const StatCard = ({ label, value, icon }: { label: string, value: string | number, icon: any }) => (
+    <div className="flex items-center p-4 bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+        <div className="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 text-indigo-600">
+            {icon}
+        </div>
+        {/* Add min-w-0 to allow this container to shrink */}
+        <div className="ml-4 min-w-0">
+            <p className="text-sm font-medium text-gray-500 truncate">{label}</p>
+            <p className="text-xl font-bold text-gray-900 truncate">{value}</p>
+        </div>
+    </div>
+);
 
-export default function HomePage({ allNotes, handleLinkClick }: Props) {
+export default function HomePage({ allNotes, notesByCategory, handleLinkClick }: Props) {
     // Sort notes by publish date to find the most recent ones
     const recentNotes = [...allNotes]
         .sort((a, b) => new Date(b.frontmatter.publishDate).getTime() - new Date(a.frontmatter.publishDate).getTime())
@@ -33,6 +46,30 @@ export default function HomePage({ allNotes, handleLinkClick }: Props) {
             <div className="text-center py-16 sm:py-20">
                 <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight">Welcome to Apollo</h1>
                 <p className="mt-4 max-w-2xl mx-auto text-lg sm:text-xl text-gray-500">Select a note from the sidebar or find one below to get started.</p>
+            </div>
+
+            {/* Stats Section */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <StatCard 
+                    label="Total Notes" 
+                    value={allNotes.length} 
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>}
+                />
+                <StatCard 
+                    label="Categories" 
+                    value={Object.keys(notesByCategory).length} 
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" /></svg>}
+                />
+                <StatCard 
+                    label="Last Update" 
+                    value={new Date(recentNotes[0].frontmatter.publishDate).toLocaleDateString()} 
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18M-4.5 12h22.5" /></svg>}
+                />
+                <StatCard 
+                    label="Version" 
+                    value="1.0" 
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" /></svg>}
+                />
             </div>
 
             {/* Recently Updated Section */}
