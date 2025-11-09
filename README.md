@@ -28,3 +28,10 @@ This project leverages a modern web stack to deliver a high-performance, interac
 
 *   **Optimized for Performance:** By using Astro's island architecture with `client:idle`, interactive components only load their JavaScript when the browser is idle, ensuring the page is responsive immediately.
 
+## Future Plans
+
+- **Markdown Editor:** Edit Markdown files and create new ones directly from the webapp.
+
+- **Postgres Database:** Store data in a proper databse, as opposed to bundled markdown files.
+
+- **User System:** Expand with a simple Auth System.
