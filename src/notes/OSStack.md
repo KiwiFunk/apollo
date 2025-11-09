@@ -1,7 +1,7 @@
 ---
 title: "The OS Stack, An Overview"
 description: "What exactly is the OS Stack? How does a computer work?"
-publishDate: "2025-11-08"
+publishDate: "2025-11-06"
 category: "CompSci Basics"
 ---
 ## Operating System (OS) Stack Overview

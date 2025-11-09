@@ -1,7 +1,7 @@
 ---
 title: "Isolation Technologies"
 description: "Virtualization, Containers & Compatibility Layers. Why do we need them?"
-publishDate: "2025-11-08"
+publishDate: "2025-11-06"
 category: "CompSci Basics"
 ---
 ## Isolation Technologies: Virtualization, Containers & Compatibility Layers

@@ -1,7 +1,7 @@
 ---
 title: "Understanding Abstraction: From Python to Machine Code"
 description: "A beginner-friendly overview of how high-level code is translated into the 1s and 0s a computer understands, covering abstraction, bytecode, assembly, and machine language."
-publishDate: "2025-11-08"
+publishDate: "2025-11-06"
 category: "CompSci Basics"
 ---
 

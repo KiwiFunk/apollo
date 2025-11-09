@@ -1,7 +1,7 @@
 ---
 title: "Base Systems And Data Representation"
 description: "What are Base Systems, and how do we store Data in Ones and Zeros?"
-publishDate: "2025-11-08"
+publishDate: "2025-11-06"
 category: "CompSci Basics"
 ---
 ## Base Systems Overview
