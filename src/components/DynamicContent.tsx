@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
 import type { MarkdownInstance } from 'astro'; 
 import type { Frontmatter } from '../types';
+import HomePage from './HomePage';
 
 interface LoadedNote {
     frontmatter: Frontmatter;
@@ -97,24 +98,6 @@ export default function DynamicContent({ allNotes }: { allNotes: MarkdownInstanc
     }
 
     return (
-        <div className="max-w-7xl mx-auto">
-            <div className="text-center border-b pb-8 mb-8 border-gray-200">
-                <h1 className="text-4xl font-bold text-gray-900">Welcome to your Knowledge Base</h1>
-                <p className="mt-2 text-lg text-gray-500">Select a note from the sidebar or find one below to get started.</p>
-            </div>
-            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                {allNotes.map((note) => (
-                    <a
-                        href={`/notes/${note.file.split("/").pop()?.replace(".md", "")}`}
-                        onClick={handleLinkClick} // Links inside Preact use the onClick prop directly
-                        className="note-link block p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200"
-                    >
-                        <h3 className="text-xl font-semibold text-gray-900">{note.frontmatter.title}</h3>
-                        <p className="mt-2 text-gray-600 line-clamp-3">{note.frontmatter.description}</p>
-                        <span className="mt-4 inline-block text-sm font-medium text-indigo-600">Read more &rarr;</span>
-                    </a>
-                ))}
-            </div>
-        </div>
+        <HomePage allNotes={allNotes} handleLinkClick={handleLinkClick} />
     );
 }
