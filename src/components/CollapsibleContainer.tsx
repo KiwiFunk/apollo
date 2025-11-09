@@ -1,14 +1,7 @@
 import { useState } from 'preact/hooks';
+import type { Note } from '../types';
 
 // Define the shape of the props we expect
-interface Note {
-    // Even though we Normalize, ts still expects glob may return undefined
-    url: string | undefined;
-    frontmatter: {
-        title: string;
-    };
-}
-
 interface Props {
   category: string;
   notes: Note[];

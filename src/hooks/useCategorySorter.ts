@@ -1,14 +1,7 @@
 import { useState, useMemo } from 'preact/hooks';
+import type { Note } from '../types';
 
 // Define data structures
-interface Note {
-  url: string | undefined;
-  frontmatter: {
-    publishDate: string;
-    [key: string]: any;
-  };
-}
-
 interface SortableCategory {
   name: string;
   notes: Note[];
