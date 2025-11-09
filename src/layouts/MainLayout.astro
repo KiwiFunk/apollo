@@ -60,9 +60,30 @@ const notesByCategory = allNotes.reduce((acc, note) => {
         <nav class="bg-white border-b border-gray-200 w-full shrink-0 shadow-sm">
             <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
-                    <!-- Branding -->
-                    <div class="shrink-0">
-                        <span class="text-2xl font-bold text-gray-900">apollo</span>
+
+                    <!-- Conditional Branding/Burger Menu -->
+                    <div class="flex items-center">
+                        <!-- Burger Menu Icon For Mobile -->
+                        <div class="lg:hidden">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="w-8 h-8"
+                                >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                                />
+                                </svg>
+                        </div>
+                        <!-- Branding for Desktop -->
+                        <div class="hidden lg:block">
+                            <span class="text-2xl font-bold text-gray-900">apollo</span>
+                        </div>
                     </div>
 
                     <!-- Centered Search Bar -->
@@ -82,7 +103,7 @@ const notesByCategory = allNotes.reduce((acc, note) => {
         <!-- Main Content Area -->
         <div class="flex-1 flex overflow-hidden">
             <!-- Categories Sidebar -->
-            <aside class="w-72 bg-gray-50 border-r border-gray-200 overflow-y-auto p-6">
+            <aside class="absolute lg:static h-full w-72 bg-gray-50 border-r border-gray-200 overflow-y-auto p-6">
                 <h2 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Categories</h2>
                 <nav class="mt-4">
                     <ul class="space-y-4">
