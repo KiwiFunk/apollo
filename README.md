@@ -32,6 +32,4 @@ This project leverages a modern web stack to deliver a high-performance, interac
 
 - **Markdown Editor:** Edit Markdown files and create new ones directly from the webapp.
 
-- **Postgres Database:** Store data in a proper databse, as opposed to bundled markdown files.
-
 - **User System:** Expand with a simple Auth System.
