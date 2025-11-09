@@ -14,3 +14,19 @@ export interface Note {
     [key: string]: any;
   };
 }
+
+export interface DbNote {
+    slug: string;
+    title: string;
+    description: string;
+    publish_date: string;
+    category: string;
+    content: string;
+}
+
+export type AppNote = {
+    url: string;
+    frontmatter: Frontmatter;
+    file: string;
+    rawContent: () => string;
+};
