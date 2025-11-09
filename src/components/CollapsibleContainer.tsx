@@ -40,7 +40,7 @@ export default function CollapsibleContainer({ category, notes }: Props) {
             viewBox="0 0 24 24" 
             stroke-width="2" 
             stroke="currentColor" 
-            className={`w-4 h-4 transition-transform duration-150 ${isOpen ? 'rotate-90' : ''}`}
+            className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`}
             >
             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
           </svg>
@@ -49,7 +49,7 @@ export default function CollapsibleContainer({ category, notes }: Props) {
       
       {/* Content area that renders the notes */}
       <div 
-        className={`transition-all duration-300 ease-in-out overflow-hidden ${
+        className={`transition-all duration-200 ease-in-out overflow-hidden ${
           isOpen ? 'max-h-screen' : 'max-h-0'
         }`}
       >
