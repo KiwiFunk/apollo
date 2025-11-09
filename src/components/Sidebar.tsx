@@ -29,7 +29,7 @@ export default function Sidebar({ children }: { children: any }) {
     };
   }, []);
 
-  // Effect to handle body scroll and overlay logic
+  // Prevent body content scrolling when mobile menu open
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add('overflow-hidden', 'lg:overflow-auto');
@@ -55,7 +55,7 @@ export default function Sidebar({ children }: { children: any }) {
 
       {/* Use an invisible overlay to capture clicks outside the sidebar */}
       {isOpen && (
-        <div onClick={() => setIsOpen(false)} class="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-10 lg:hidden"></div>
+        <div onClick={() => setIsOpen(false)} class="fixed inset-0 bg-[rgba(0,0,0,0.0)] z-10 lg:hidden"></div>
       )}
     </>
   );
