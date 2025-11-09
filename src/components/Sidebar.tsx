@@ -44,7 +44,7 @@ export default function Sidebar({ children }: { children: any }) {
         ref={sidebarRef}                // Attach the ref
         onClick={handleContentClick}    // Attach the click handler
         className={[
-          "w-72 bg-gray-50 border-r border-gray-200 overflow-y-auto p-6",
+          "select-none w-72 bg-gray-50 border-r border-gray-200 overflow-y-auto p-6",
           "h-full transition-transform transform",
           "fixed lg:static z-20",
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
