@@ -1,30 +1,39 @@
 import type { APIRoute } from 'astro';
 import { marked } from 'marked';
-import matter from 'gray-matter';
-import fs from 'fs/promises';
-import path from 'path';
+import pg from 'pg';
+
+const { Pool } = pg;
+const pool = new Pool({ connectionString: import.meta.env.DATABASE_URL });
 
 export const GET: APIRoute = async ({ params }) => {
     const { slug } = params;
-
-    if (!slug) {
-        return new Response("Slug not provided", { status: 400 });
-    }
+    if (!slug) return new Response("Slug not provided", { status: 400 });
 
     try {
-        const filePath = path.join(process.cwd(), 'src/notes', `${slug}.md`);
-        const rawContent = await fs.readFile(filePath, 'utf-8');
+        const { rows } = await pool.query('SELECT * FROM notes WHERE slug = $1', [slug]);
+        if (rows.length === 0) {
+            return new Response(`Note not found: ${slug}`, { status: 404 });
+        }
         
-        const { data: frontmatter, content } = matter(rawContent);
-        const htmlContent = marked(content);
+        const note = rows[0];
+        const htmlContent = marked(note.content);
 
-        return new Response(JSON.stringify({ frontmatter, htmlContent }), {
+        const responseData = {
+            frontmatter: {
+                title: note.title,
+                description: note.description,
+                publishDate: new Date(note.publish_date).toISOString(),
+                category: note.category,
+            },
+            htmlContent,
+        };
+
+        return new Response(JSON.stringify(responseData), {
             status: 200,
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: { 'Content-Type': 'application/json' }
         });
     } catch (error) {
-        return new Response(`Note not found: ${slug}`, { status: 404 });
+        console.error(error);
+        return new Response('Internal Server Error', { status: 500 });
     }
 };

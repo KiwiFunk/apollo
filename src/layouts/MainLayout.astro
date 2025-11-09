@@ -6,32 +6,41 @@ import Search from "../components/Search.tsx";
 import DynamicContent from "../components/DynamicContent.tsx";
 import BurgerButton from '../components/BurgerButton.tsx';
 import Sidebar from '../components/Sidebar.tsx';
+import pg from 'pg';
 
-// Fetch All Markdown Notes
-const notesImport = Object.values(import.meta.glob('../notes/*.md', { eager: true })) as MarkdownInstance<Frontmatter>[];
+const { Pool } = pg;
+// Use import.meta.env to access environment var in Astro
+const pool = new Pool({ connectionString: import.meta.env.DATABASE_URL });
 
-// Normalize Data - Spread frontmatter and add URL property (With SSR, note.url will be undefined)
-const allNotes = notesImport.map((note) => {
-	return {
-		...note,
-		url: `/notes/${note.file.split('/').pop()?.replace('.md', '')}`
-	};
-});
+// Fetch all notes from the database
+const { rows: dbNotes } = await pool.query('SELECT slug, title, description, publish_date, category, content FROM notes ORDER BY publish_date DESC');
+
+// Normalize data to match the structure our components expect
+const allNotes = dbNotes.map(note => ({
+    url: `/notes/${note.slug}`,
+    frontmatter: {
+        title: note.title,
+        description: note.description,
+        publishDate: new Date(note.publish_date).toISOString(),
+        category: note.category || 'Uncategorized',
+    },
+    // Mock the file and rawContent properties for compatibility
+    file: `/src/notes/${note.slug}.md`,
+    rawContent: () => note.content,
+}));
 
 // Prepare Search List using flatMap to ensure all items have a valid slug
 const searchList = allNotes.flatMap(note => {
   const slug = note.file.split('/').pop()?.replace('.md', '');
   
   // If !slug, filter this item out by returning an empty array
-  if (!slug) {
-    return [];
-  }
+  if (!slug) return [];
 
   // If slug exists, return the search item in an array
   return [{
     title: note.frontmatter.title,
     description: note.frontmatter.description,
-    category: note.frontmatter.category || 'Uncategorized',
+    category: note.frontmatter.category,
     slug: slug,
     content: note.rawContent(),
   }];
