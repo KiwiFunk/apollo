@@ -103,7 +103,7 @@ export default function Search({ searchList }: Props) {
       
       {/* Search Results Dropdown */}
       {query.length > 1 && (
-        <div class="absolute mt-2 w-full max-h-96 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg z-10">
+        <div class="absolute mt-2 w-full max-h-96 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg z-1000">
           {results.length > 0 ? (
             <ul>
               {results.map(({ item }) => (
