@@ -96,7 +96,7 @@ const notesByCategory = allNotes.reduce((acc, note) => {
             <!-- Categories Sidebar -->
             <Sidebar client:load>
                 <h2 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Categories</h2>
-                <ul class="space-y-1 mt-1">
+                <ul class="space-y-1 mt-1 mb-24 lg:mb-12">
                     {Object.entries(notesByCategory).map(([category, notes]) => (
                         <CollapsibleContainer 
                             client:load 
