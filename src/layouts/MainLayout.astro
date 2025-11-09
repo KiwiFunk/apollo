@@ -132,30 +132,5 @@ const notesByCategory = allNotes.reduce((acc, note) => {
         </div>
     </div>
 
-    <script is:inline>
-        const burgerButton = document.getElementById('burger-menu');
-        const sidebar = document.getElementById('sidebar');
-
-        if (burgerButton.classList.contains('lg:hidden')) {
-            burgerButton.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevents the click from bubbling up to the document
-                sidebar.classList.toggle('-translate-x-full');
-            });
-
-            // Optional: Close sidebar when clicking outside of it
-            document.addEventListener('click', () => {
-                if (!sidebar.classList.contains('-translate-x-full')) {
-                    sidebar.classList.add('-translate-x-full');
-                }
-            });
-
-            // Prevent clicks inside the sidebar from closing it
-            sidebar.addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
-        }
-
-    </script>
-
 </body>
 </html>
