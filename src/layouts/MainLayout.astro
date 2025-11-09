@@ -64,7 +64,7 @@ const notesByCategory = allNotes.reduce((acc, note) => {
                     <!-- Conditional Branding/Burger Menu -->
                     <div class="flex items-center">
                         <!-- Burger Menu Icon For Mobile -->
-                        <div class="lg:hidden">
+                        <div id="burger-menu" class="lg:hidden">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -103,7 +103,7 @@ const notesByCategory = allNotes.reduce((acc, note) => {
         <!-- Main Content Area -->
         <div class="flex-1 flex overflow-hidden">
             <!-- Categories Sidebar -->
-            <aside class="absolute lg:static h-full w-72 bg-gray-50 border-r border-gray-200 overflow-y-auto p-6">
+            <aside id="sidebar" class="absolute lg:static h-full w-72 bg-gray-50 border-r border-gray-200 overflow-y-auto p-6">
                 <h2 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Categories</h2>
                 <nav class="mt-4">
                     <ul class="space-y-4">
@@ -131,5 +131,31 @@ const notesByCategory = allNotes.reduce((acc, note) => {
             </main>
         </div>
     </div>
+
+    <script is:inline>
+        const burgerButton = document.getElementById('burger-menu');
+        const sidebar = document.getElementById('sidebar');
+
+        if (burgerButton.classList.contains('lg:hidden')) {
+            burgerButton.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevents the click from bubbling up to the document
+                sidebar.classList.toggle('-translate-x-full');
+            });
+
+            // Optional: Close sidebar when clicking outside of it
+            document.addEventListener('click', () => {
+                if (!sidebar.classList.contains('-translate-x-full')) {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+
+            // Prevent clicks inside the sidebar from closing it
+            sidebar.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
+
+    </script>
+
 </body>
 </html>
