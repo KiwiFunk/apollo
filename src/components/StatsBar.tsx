@@ -49,7 +49,7 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
                     </div>
 
                     {/* Note Statistics */}
-                    <div class="text-[11px] uppercase tracking-widest font-semibold flex flex-row gap-6">
+                    <div class="text-[11px] uppercase tracking-widest font-semibold flex flex-col sm:flex-row gap-1.5 sm:gap-6">
                         <span>
                             <h4 class="text-gray-400">Published:</h4>
                             {formattedDate}
