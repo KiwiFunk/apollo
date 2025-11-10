@@ -27,7 +27,7 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
         const wordsPerMinute = 225;
         const result = totalWords / wordsPerMinute;
         
-        if (result < 1) return "Less than a minute";
+        if (result < 1) return "Under a minute";
         else return `${Math.ceil(result)} min read`;
     }
 
@@ -37,24 +37,24 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
             <div class="flex items-center justify-between px-7 pt-5">
 
                 <div>
-                    <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Note Title</h4>
-                    <h1>{title}</h1>
+                    <h4 class="text-gray-400 text-xs font-semibold uppercase tracking-widest">Note Title</h4>
+                    <h1 class="tracking-wider text-lg font-semibold">{title}</h1>
                 </div>
 
                 {/* Note Statistics */}
-                <div>
-                    <span class="flex-col">
-                        <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Published:</h4>
+                <div class="text-[11px] uppercase tracking-widest font-semibold flex flex-row gap-6">
+                    <span>
+                        <h4 class="text-gray-400">Published:</h4>
                         {formattedDate}
                     </span>
 
-                    <span class="flex-col">
-                        <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Words:</h4>
+                    <span>
+                        <h4 class="text-gray-400">Words:</h4>
                         {totalWords}    
                     </span>
 
-                    <span class="flex-col">
-                        <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Reading Time:</h4>
+                    <span>
+                        <h4 class="text-gray-400">Reading Time:</h4>
                         {calcReadingTime()}
                     </span>
                 </div>
@@ -62,6 +62,7 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
 
             <div class="border-t border-gray-200 my-5" />
     
+            {/* Lower Section */}
             <div class="flex flex-row gap-5 items-baseline px-7">
                 <button onClick={handleBackClick} className="text-indigo-600 text-xs font-semibold uppercase tracking-wider hover:underline cursor-pointer">
                     &larr; Home
