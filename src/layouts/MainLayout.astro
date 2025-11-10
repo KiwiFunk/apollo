@@ -73,7 +73,7 @@ const notesByCategory = allNotes.reduce((acc: Record<string, AppNote[]>, note: A
         <!-- Navbar -->
         <nav class="bg-white border-b border-gray-200 w-full shrink-0 shadow-sm">
             <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-16">
+                <div class="relative flex items-center justify-between h-16">
 
                     <!-- Conditional Branding/Burger Menu -->
                     <div class="flex items-center">
@@ -81,13 +81,13 @@ const notesByCategory = allNotes.reduce((acc: Record<string, AppNote[]>, note: A
                         <BurgerButton client:load/>
 
                         <!-- Branding for Desktop -->
-                        <div class="hidden lg:block">
+                        <div class="hidden lg:block absolute">
                             <span class="text-2xl font-bold text-gray-900">apollo</span>
                         </div>
                     </div>
 
                     <!-- Centered Search Bar -->
-                    <div class="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-center">
+                    <div class="flex-1 flex justify-center px-2">
                         <div class="max-w-md w-full lg:max-w-xl">
                             <label for="search" class="sr-only">Search</label>
                             <div class="relative">
@@ -95,7 +95,6 @@ const notesByCategory = allNotes.reduce((acc: Record<string, AppNote[]>, note: A
                             </div>
                         </div>
                     </div>
-                    <div class="w-24"></div> <!-- Spacer to balance branding -->
                 </div>
             </div>
         </nav>
