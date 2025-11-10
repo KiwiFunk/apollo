@@ -34,37 +34,44 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
 
     return (
         <div class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10 w-full">
-            {/* Upper Section */}
-            <div class="flex items-center justify-between px-7 pt-4">
 
-                <div>
-                    <h4 class="text-gray-400 text-xs font-semibold uppercase tracking-widest">Note Title</h4>
-                    <h1 class="tracking-wider text-lg font-semibold">{title}</h1>
+            {/* Content here will be hidden when stats collapsed */}
+            <div className={`
+                transition-[max-height] duration-400 ease-in-out overflow-hidden
+                ${isOpen ? 'max-h-96' : 'max-h-0'}
+            `}>
+                {/* Upper Section */}
+                <div class="flex items-center justify-between px-7 pt-4">
+
+                    <div>
+                        <h4 class="text-gray-400 text-xs font-semibold uppercase tracking-widest">Note Title</h4>
+                        <h1 class="tracking-wider text-lg font-semibold">{title}</h1>
+                    </div>
+
+                    {/* Note Statistics */}
+                    <div class="text-[11px] uppercase tracking-widest font-semibold flex flex-row gap-6">
+                        <span>
+                            <h4 class="text-gray-400">Published:</h4>
+                            {formattedDate}
+                        </span>
+
+                        <span>
+                            <h4 class="text-gray-400">Words:</h4>
+                            {totalWords}    
+                        </span>
+
+                        <span>
+                            <h4 class="text-gray-400">Reading Time:</h4>
+                            {calcReadingTime()}
+                        </span>
+                    </div>
                 </div>
 
-                {/* Note Statistics */}
-                <div class="text-[11px] uppercase tracking-widest font-semibold flex flex-row gap-6">
-                    <span>
-                        <h4 class="text-gray-400">Published:</h4>
-                        {formattedDate}
-                    </span>
-
-                    <span>
-                        <h4 class="text-gray-400">Words:</h4>
-                        {totalWords}    
-                    </span>
-
-                    <span>
-                        <h4 class="text-gray-400">Reading Time:</h4>
-                        {calcReadingTime()}
-                    </span>
-                </div>
+                <div class="border-t border-gray-200 my-4" />
             </div>
-
-            <div class="border-t border-gray-200 my-4" />
     
             {/* Lower Section */}
-            <div class="flex justify-between px-7">
+            <div class={`flex justify-between px-7 transition-all duration-200 ease-in-out ${!isOpen ? 'mt-4' : 'mt-0'}`}>
                 {/* Breadcrumbs */}
                 <div class="flex flex-row gap-4 items-baseline">
                     <button onClick={handleBackClick} className="text-indigo-600 text-xs font-semibold uppercase tracking-wider hover:underline cursor-pointer">
@@ -82,7 +89,7 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
                         viewBox="0 0 24 24" 
                         stroke-width="2" 
                         stroke="currentColor" 
-                        className={`w-4 h-4 cursor-pointer transition-transform duration-200 ${!isOpen ? 'rotate-180' : ''}`}
+                        className={`w-4 h-4 cursor-pointer transition-transform duration-400 ${!isOpen ? 'rotate-180' : ''}`}
                         >
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 15.75L12 8.25l-7.5 7.5" />
                     </svg>
