@@ -9,8 +9,16 @@ import type { Frontmatter } from "../types";
 
 export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: { frontmatter: Frontmatter, htmlContent: string, handleBackClick: () => void }) {
 
-    // Deconstruct frontmatter to get title and publish_date
+    // Deconstruct frontmatter to get title, category and publish_date
     const { title, publishDate, category } = frontmatter;
+
+    // Properly format the date for human eyes
+    const formattedDate = new Date(publishDate).toLocaleDateString('en-GB', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        timeZone: 'UTC' 
+    });
 
     const totalWords = htmlContent.split(/\s+/).length;
 
@@ -37,7 +45,7 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
                 <div>
                     <span class="flex-col">
                         <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Published:</h4>
-                        {publishDate}
+                        {formattedDate}
                     </span>
 
                     <span class="flex-col">
