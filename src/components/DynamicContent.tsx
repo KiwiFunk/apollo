@@ -88,7 +88,7 @@ export default function DynamicContent({ allNotes, notesByCategory }: { allNotes
         return (
             <article className="prose prose-slate lg:prose-l max-w-5xl mx-auto">
                 <StatsBar frontmatter={activeNote.frontmatter} htmlContent={activeNote.htmlContent} handleBackClick={handleBackClick} />
-                <div dangerouslySetInnerHTML={{ __html: activeNote.htmlContent }} />
+                <div class="p-12" dangerouslySetInnerHTML={{ __html: activeNote.htmlContent }} />
             </article>
         );
     }

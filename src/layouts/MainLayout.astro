@@ -107,7 +107,7 @@ const notesByCategory = allNotes.reduce((acc: Record<string, AppNote[]>, note: A
             <Sidebar client:load notesByCategory={notesByCategory} />
 
             <!-- Homepage / Note Display Window -->
-            <main class="flex-1 p-12 overflow-y-auto">
+            <main class="flex-1 overflow-y-auto">
                 <DynamicContent client:idle allNotes={allNotes} notesByCategory={notesByCategory} />
                 <slot />
             </main>
