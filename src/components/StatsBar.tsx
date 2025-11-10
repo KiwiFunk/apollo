@@ -33,7 +33,7 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
     }
 
     return (
-        <div class="bg-white border-b border-gray-200 w-full shadow-sm">
+        <div class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10 w-full">
             {/* Upper Section */}
             <div class="flex items-center justify-between px-7 pt-4">
 
