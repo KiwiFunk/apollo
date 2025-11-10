@@ -7,7 +7,7 @@
 //
 import type { Frontmatter } from "../types";
 
-export default function StatsBar({ frontmatter, htmlContent }: { frontmatter: Frontmatter, htmlContent: string }) {
+export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: { frontmatter: Frontmatter, htmlContent: string, handleBackClick: () => void }) {
 
     // Deconstruct frontmatter to get title and publish_date
     const { title, publishDate, category } = frontmatter;
@@ -50,6 +50,10 @@ export default function StatsBar({ frontmatter, htmlContent }: { frontmatter: Fr
 
             {/* Lower Section */}
             <div>
+                <button onClick={handleBackClick} className="mb-8 text-indigo-600 hover:underline">
+                    &larr; Back to Home
+                </button>
+
                 <h2 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">{ category }</h2>
             </div>
         </div>
