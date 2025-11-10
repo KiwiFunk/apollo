@@ -12,11 +12,11 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
     // Deconstruct frontmatter to get title and publish_date
     const { title, publishDate, category } = frontmatter;
 
+    const totalWords = htmlContent.split(/\s+/).length;
+
     const calcReadingTime = () => {
         // Simple reading time calculation: average adult reads about 200-250 words per minute
         const wordsPerMinute = 225;
-        const totalWords = htmlContent.split(/\s+/).length;
-        
         const result = totalWords / wordsPerMinute;
         
         if (result < 1) return "Less than a minute";
@@ -24,7 +24,7 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
     }
 
     return (
-        <div class="fixed">
+        <div class="bg-white border-b border-gray-200 w-full shadow-sm">
             {/* Upper Section */}
             <div class="flex items-center justify-between">
                 <div>
