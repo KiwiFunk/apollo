@@ -29,24 +29,24 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
             <div class="flex items-center justify-between px-7 pt-5">
 
                 <div>
-                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Note Title</h2>
+                    <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Note Title</h4>
                     <h1>{title}</h1>
                 </div>
 
                 {/* Note Statistics */}
                 <div>
                     <span class="flex-col">
-                        <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Published:</h2>
+                        <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Published:</h4>
                         {publishDate}
                     </span>
 
                     <span class="flex-col">
-                        <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Words:</h2>
+                        <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Words:</h4>
                         {totalWords}    
                     </span>
 
                     <span class="flex-col">
-                        <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Reading Time:</h2>
+                        <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Reading Time:</h4>
                         {calcReadingTime()}
                     </span>
                 </div>
