@@ -64,10 +64,9 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
             <div class="border-t border-gray-200 my-4" />
     
             {/* Lower Section */}
-            <div>
-
+            <div class="flex justify-between px-7">
                 {/* Breadcrumbs */}
-                <div class="flex flex-row gap-5 items-baseline px-7">
+                <div class="flex flex-row gap-4 items-baseline">
                     <button onClick={handleBackClick} className="text-indigo-600 text-xs font-semibold uppercase tracking-wider hover:underline cursor-pointer">
                         &larr; Home
                     </button>
@@ -76,11 +75,21 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
                 </div>
 
                 {/* Show/Hide Toggle */}
-                <div>
-
+                <div onClick={handleToggle} role="button">
+                    <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke-width="2" 
+                        stroke="currentColor" 
+                        className={`w-4 h-4 cursor-pointer transition-transform duration-200 ${!isOpen ? 'rotate-180' : ''}`}
+                        >
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 15.75L12 8.25l-7.5 7.5" />
+                    </svg>
                 </div>
-
             </div>
+            
+            
         </div>
 
     )
