@@ -40,6 +40,11 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
                     </span>
 
                     <span class="flex-col">
+                        <h2 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Words:</h2>
+                        {totalWords}
+                    </span>
+
+                    <span class="flex-col">
                         <h2 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Reading Time:</h2>
                         {calcReadingTime()}
                     </span>
