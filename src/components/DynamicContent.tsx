@@ -2,6 +2,7 @@ import { useState, useEffect } from 'preact/hooks';
 import type { MarkdownInstance } from 'astro'; 
 import type { Frontmatter, AppNote } from '../types';
 import HomePage from './HomePage';
+import StatsBar from './StatsBar';
 
 interface LoadedNote {
     frontmatter: Frontmatter;
@@ -86,12 +87,7 @@ export default function DynamicContent({ allNotes, notesByCategory }: { allNotes
     if (activeNote) {
         return (
             <article className="prose prose-slate lg:prose-l max-w-5xl mx-auto">
-                <button onClick={handleBackClick} className="mb-8 text-indigo-600 hover:underline">
-                    &larr; Back to Home
-                </button>
-                <h1>{activeNote.frontmatter.title}</h1>
-                <p className="text-sm text-gray-500">Published on: {activeNote.frontmatter.publishDate}</p>
-                <hr className="my-4" />
+                <StatsBar frontmatter={activeNote.frontmatter} htmlContent={activeNote.htmlContent} handleBackClick={handleBackClick} />
                 <div dangerouslySetInnerHTML={{ __html: activeNote.htmlContent }} />
             </article>
         );
