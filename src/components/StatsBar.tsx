@@ -26,40 +26,40 @@ export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: 
     return (
         <div class="bg-white border-b border-gray-200 w-full shadow-sm">
             {/* Upper Section */}
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between px-7 pt-5">
+
                 <div>
-                    <h2 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Note Title</h2>
+                    <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Note Title</h2>
                     <h1>{title}</h1>
                 </div>
 
                 {/* Note Statistics */}
                 <div>
                     <span class="flex-col">
-                        <h2 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Published:</h2>
+                        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Published:</h2>
                         {publishDate}
                     </span>
 
                     <span class="flex-col">
-                        <h2 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Words:</h2>
-                        {totalWords}
+                        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Words:</h2>
+                        {totalWords}    
                     </span>
 
                     <span class="flex-col">
-                        <h2 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Reading Time:</h2>
+                        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Reading Time:</h2>
                         {calcReadingTime()}
                     </span>
                 </div>
             </div>
 
-            <hr className="my-4" />
-
-            {/* Lower Section */}
-            <div>
-                <button onClick={handleBackClick} className="mb-8 text-indigo-600 hover:underline">
-                    &larr; Back to Home
+            <div class="border-t border-gray-200 my-5" />
+    
+            <div class="flex flex-row gap-5 items-baseline px-7">
+                <button onClick={handleBackClick} className="text-indigo-600 text-xs font-semibold uppercase tracking-wider hover:underline cursor-pointer">
+                    &larr; Home
                 </button>
 
-                <h2 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">{ category }</h2>
+                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider m-0 mb-5">{ category }</p>
             </div>
         </div>
 
