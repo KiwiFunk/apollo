@@ -1,60 +1,34 @@
 ---
-import type { Frontmatter } from "../types"; // Import the Frontmatter type
-import type { MarkdownInstance } from 'astro'; // Import Astro's MarkdownInstance type
+import type { Note } from "../types";
+
 import "../styles/global.css";
 import Search from "../components/Search.tsx";
 import DynamicContent from "../components/DynamicContent.tsx";
 import BurgerButton from '../components/BurgerButton.tsx';
 import Sidebar from '../components/Sidebar.tsx';
-import pg from 'pg';
-import type { DbNote, AppNote } from '../types';    
 
-const { Pool } = pg;
-// Use import.meta.env to access environment var in Astro
-const pool = new Pool({ connectionString: import.meta.env.DATABASE_URL });
+import { db } from '../db'; // Import the Drizzle client
+import { notes as notesTable } from '../db/schema'; // Import the notes table schema
+import { desc } from 'drizzle-orm';
 
-// Fetch all notes from the database
-const { rows: dbNotes } = await pool.query('SELECT slug, title, description, publish_date, category, content FROM notes ORDER BY publish_date DESC');
+// Use Drizzle query builder to fetch notes. Type-safe and returns a `Note[]` array.
+const allNotes: Note[] = await db.select().from(notesTable).orderBy(desc(notesTable.publishDate));
 
-// Normalize data to match the structure our components expect
-const allNotes: AppNote[] = (dbNotes as DbNote[]).map((note: DbNote) => ({
-    url: `/notes/${note.slug}`,
-    frontmatter: {
-        title: note.title,
-        description: note.description,
-        publishDate: new Date(note.publish_date).toISOString(),
-        category: note.category || 'Uncategorized',
-    },
-    // Mock the file and rawContent properties for compatibility
-    file: `/src/notes/${note.slug}.md`,
-    rawContent: () => note.content,
+// Normalize notes for search functionality
+const searchList = allNotes.map(note => ({
+  title: note.title,
+  description: note.description || '',         
+  category: note.category || 'Uncategorized',
+  slug: note.slug,
+  content: note.content || '',
 }));
 
-// Prepare Search List using flatMap to ensure all items have a valid slug
-const searchList = allNotes.flatMap((note: AppNote) => {
-  const slug = note.url.split('/').pop();
-
-  // If !slug, filter this item out by returning an empty array
-  if (!slug) return [];
-
-  // If slug exists, return the search item in an array
-  return [{
-    title: note.frontmatter.title,
-    description: note.frontmatter.description,
-    category: note.frontmatter.category || 'Uncategorized',
-    slug: slug,
-    content: note.rawContent(),
-  }];
-});
-
-// Group Notes by Category
-const notesByCategory = allNotes.reduce((acc: Record<string, AppNote[]>, note: AppNote) => {
-    const category = note.frontmatter.category || 'Uncategorized';
+const notesByCategory = allNotes.reduce((acc: Record<string, Note[]>, note: Note) => {
+    const category = note.category || 'Uncategorized';
     if (!acc[category]) {
         acc[category] = [];
     }
     acc[category].push(note);
-    // Ensure the accumulator type matches the type of 'allNotes'
     return acc;
 }, {});
 ---
