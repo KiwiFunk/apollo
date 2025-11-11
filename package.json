@@ -18,15 +18,18 @@
     "@tailwindcss/vite": "^4.1.17",
     "astro": "^5.15.4",
     "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.44.7",
     "fuse.js": "^7.1.0",
     "gray-matter": "^4.0.3",
     "marked": "^17.0.0",
     "pg": "^8.16.3",
+    "postgres": "^3.4.7",
     "preact": "^10.27.2",
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.19",
-    "@types/pg": "^8.15.6"
+    "@types/pg": "^8.15.6",
+    "drizzle-kit": "^0.31.6"
   }
 }
