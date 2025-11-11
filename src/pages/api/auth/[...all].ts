@@ -1,4 +1,4 @@
-import { auth } from "../../../../auth"; // Path to auth.ts
+import { auth } from "../../../lib/auth"; // Path to Auth.ts
 import type { APIRoute } from "astro";
 
 // Important! Tell Astro endpoint is dynamic and must be run on the server for every request.
