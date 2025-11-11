@@ -1,32 +1,23 @@
-// Define shape of note and frontmatter data
+import type { InferSelectModel } from 'drizzle-orm';
+import type { notes, users } from './db/schema';
+
+// Inferred directly from Drizzle schema for 'notes'.
+export type Note = InferSelectModel<typeof notes>;
+
+// Inferred directly from Drizzle schema for 'users'.
+export type User = InferSelectModel<typeof users>;
+
 export interface Frontmatter {
     title: string;
-    description: string;
-    publishDate: string;
-    category?: string;
+    description: string | null; // description can be null in the DB
+    publishDate: string | null; // publishDate can be null in the DB
+    category?: string | null; // category can be null in the DB
 }
 
-export interface Note {
-  url: string | undefined; // Even though we Normalize, ts still expects glob may return undefined
-  frontmatter: {
-    title: string;
-    publishDate: string;
-    [key: string]: any;
-  };
+export interface SearchItem {
+  title: string;
+  description: string;
+  category: string;
+  slug: string;
+  content: string;
 }
-
-export interface DbNote {
-    slug: string;
-    title: string;
-    description: string;
-    publish_date: string;
-    category: string;
-    content: string;
-}
-
-export type AppNote = {
-    url: string;
-    frontmatter: Frontmatter;
-    file: string;
-    rawContent: () => string;
-};
