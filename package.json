@@ -9,7 +9,8 @@
     "astro": "astro",
     "start": "node dist/server/entry.mjs",
     "db:schema:create": "node scripts/createSchema.mjs",
-    "db:migrate": "node scripts/migrate.mjs"
+    "db:migrate": "node scripts/migrate.mjs",
+    "db:generate": "drizzle-kit generate:pg"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.10",
