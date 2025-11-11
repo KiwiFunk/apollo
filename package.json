@@ -10,7 +10,7 @@
     "start": "node dist/server/entry.mjs",
     "db:schema:create": "node scripts/createSchema.mjs",
     "db:migrate": "node scripts/migrate.mjs",
-    "db:generate": "drizzle-kit generate:pg"
+    "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.10",
