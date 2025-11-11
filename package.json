@@ -8,7 +8,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "start": "node dist/server/entry.mjs",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "node --loader ts-node/esm scripts/migrate.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.10",
