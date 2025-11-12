@@ -29,7 +29,7 @@ export default function LoginForm() {
         name,
         email,
         password,
-        callbackURL: "https://example.com/callback",
+        callbackURL: "/",
       });
 
       if (error) {
@@ -100,7 +100,7 @@ export default function LoginForm() {
           {mode === "login" ? "Need an account? Sign up" : "Already have an account? Sign In"}
         </button>
       </div>
-      
+
     </div>
   );
 }
