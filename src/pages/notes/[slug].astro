@@ -1,6 +1,18 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
+import Head from '../../components/head.astro';
 ---
-<MainLayout>
-    <!-- Populate <slot /> if needed -->
-</MainLayout>
+<html lang="en">
+
+    <Head />
+
+    <body class="bg-gray-100 text-gray-800">
+
+        <!-- If auth session, else redirect to / -->
+
+        <MainLayout>
+            <!-- Populate Slot if needed -->
+        </MainLayout>
+    </body>
+
+</html>
