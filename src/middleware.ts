@@ -12,7 +12,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const user = session?.user ?? null;
 
     // Attach the session and user data to `context.locals`.
-    context.locals = { session, user: session?.user ?? null };
+    context.locals.session = session;
+    context.locals.user = session?.user ?? null;
 
     // Continue to the requested page.
     return next();
