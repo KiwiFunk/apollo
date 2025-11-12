@@ -9,12 +9,19 @@ import Sidebar from "../components/Sidebar.tsx";
 
 import { db } from "../db"; // Import the Drizzle client
 import { notes as notesTable } from "../db/schema"; // Import the notes table schema
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";         // Import descending for sorting, and eq (equals) operator
 
-// Use Drizzle query builder to fetch notes. Type-safe and returns a `Note[]` array.
+const { user } = Astro.locals;  // Middleware provides user data directly (and safely)
+
+// Critical security check - redirect any users without a session
+if (!user) return Astro.redirect('/');
+
+// Use Drizzle query builder to fetch notes. WHERE userId matches the current User's ID
+// Type-safe and returns a `Note[]` array.
 const allNotes: Note[] = await db
     .select()
     .from(notesTable)
+    .where(eq(notesTable.userId, user.id))
     .orderBy(desc(notesTable.publishDate));
 
 // Normalize notes for search functionality
