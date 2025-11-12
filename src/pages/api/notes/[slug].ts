@@ -2,18 +2,30 @@ import type { APIRoute } from 'astro';
 import { marked } from 'marked';
 import { db } from '../../../db';           // Import central Drizzle client
 import { notes } from '../../../db/schema'; // Import the notes table schema
-import { eq } from 'drizzle-orm';           // Import the 'equals' operator from Drizzle
+import { eq, and } from 'drizzle-orm';      // Import the 'equals' & 'and' operator from Drizzle
 
-export const GET: APIRoute = async ({ params }) => {
-    const { slug } = params;
-    if (!slug) {
-        return new Response("Slug not provided", { status: 400 });
-    }
+// Get locals from context
+export const GET: APIRoute = async ({ params, locals }) => {
+
+    const { slug } = params;    // Get the current slug
+    const { user } = locals;    // Get current authenticated user from middleware
+
+    // Check if the user is authed
+    if (!user) return new Response("Unauthorized", { status: 401 });
+    
+    if (!slug) return new Response("Slug not provided", { status: 400 });
 
     try {
         // Use the Drizzle query builder for a type-safe query
-        const result = await db.select().from(notes).where(eq(notes.slug, slug)).limit(1);
+        // Check for both slug AND userId.
+        const result = await db.select().from(notes).where(
+            and(
+                eq(notes.slug, slug),
+                eq(notes.userId, user.id) // Ensures the note belongs to the user
+            )
+        ).limit(1);
 
+        // Return 404 if note doesn't exist, or doesnt belong to the authenticated user.
         if (result.length === 0) {
             return new Response(`Note not found: ${slug}`, { status: 404 });
         }
