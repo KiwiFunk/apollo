@@ -4,88 +4,85 @@ import type { Note } from "../types";
 import "../styles/global.css";
 import Search from "../components/Search.tsx";
 import DynamicContent from "../components/DynamicContent.tsx";
-import BurgerButton from '../components/BurgerButton.tsx';
-import Sidebar from '../components/Sidebar.tsx';
+import BurgerButton from "../components/BurgerButton.tsx";
+import Sidebar from "../components/Sidebar.tsx";
 
-import { db } from '../db';                         // Import the Drizzle client
-import { notes as notesTable } from '../db/schema'; // Import the notes table schema
-import { desc } from 'drizzle-orm';
+import { db } from "../db"; // Import the Drizzle client
+import { notes as notesTable } from "../db/schema"; // Import the notes table schema
+import { desc } from "drizzle-orm";
 
 // Use Drizzle query builder to fetch notes. Type-safe and returns a `Note[]` array.
-const allNotes: Note[] = await db.select().from(notesTable).orderBy(desc(notesTable.publishDate));
+const allNotes: Note[] = await db
+    .select()
+    .from(notesTable)
+    .orderBy(desc(notesTable.publishDate));
 
 // Normalize notes for search functionality
-const searchList = allNotes.map(note => ({
-  title: note.title,
-  description: note.description || '',         
-  category: note.category || 'Uncategorized',
-  slug: note.slug,
-  content: note.content || '',
+const searchList = allNotes.map((note) => ({
+    title: note.title,
+    description: note.description || "",
+    category: note.category || "Uncategorized",
+    slug: note.slug,
+    content: note.content || "",
 }));
 
-const notesByCategory = allNotes.reduce((acc: Record<string, Note[]>, note: Note) => {
-    const category = note.category || 'Uncategorized';
-    if (!acc[category]) {
-        acc[category] = [];
-    }
-    acc[category].push(note);
-    return acc;
-}, {});
+const notesByCategory = allNotes.reduce(
+    (acc: Record<string, Note[]>, note: Note) => {
+        const category = note.category || "Uncategorized";
+        if (!acc[category]) {
+            acc[category] = [];
+        }
+        acc[category].push(note);
+        return acc;
+    },
+    {},
+);
 ---
 
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Apollo Knowledge Base</title>
-</head>
+<div class="flex flex-col h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-gray-200 w-full shrink-0 shadow-sm">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="relative flex items-center justify-between h-16">
+                <!-- Conditional Branding/Burger Menu -->
+                <div class="flex items-center">
+                    <!-- Burger Menu Icon For Mobile -->
+                    <BurgerButton client:load />
 
-<body class="bg-gray-100 text-gray-800">
-    <div class="flex flex-col h-screen">
-        <!-- Navbar -->
-        <nav class="bg-white border-b border-gray-200 w-full shrink-0 shadow-sm">
-            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="relative flex items-center justify-between h-16">
-
-                    <!-- Conditional Branding/Burger Menu -->
-                    <div class="flex items-center">
-                        <!-- Burger Menu Icon For Mobile -->
-                        <BurgerButton client:load/>
-
-                        <!-- Branding for Desktop -->
-                        <div class="hidden lg:block absolute">
-                            <span class="text-2xl font-bold text-gray-900">apollo</span>
-                        </div>
+                    <!-- Branding for Desktop -->
+                    <div class="hidden lg:block absolute">
+                        <span class="text-2xl font-bold text-gray-900"
+                            >apollo</span
+                        >
                     </div>
+                </div>
 
-                    <!-- Centered Search Bar -->
-                    <div class="flex-1 flex justify-center px-2">
-                        <div class="max-w-md w-full lg:max-w-xl">
-                            <label for="search" class="sr-only">Search</label>
-                            <div class="relative">
-                                <Search client:load searchList={searchList} />
-                            </div>
+                <!-- Centered Search Bar -->
+                <div class="flex-1 flex justify-center px-2">
+                    <div class="max-w-md w-full lg:max-w-xl">
+                        <label for="search" class="sr-only">Search</label>
+                        <div class="relative">
+                            <Search client:load searchList={searchList} />
                         </div>
                     </div>
                 </div>
             </div>
-        </nav>
-
-        <!-- Main Content Area -->
-        <div class="flex-1 flex overflow-hidden">
-            
-            <!-- Categories Sidebar -->
-            <Sidebar client:load notesByCategory={notesByCategory} />
-
-            <!-- Homepage / Note Display Window -->
-            <main class="flex-1 overflow-y-auto">
-                <DynamicContent client:idle allNotes={allNotes} notesByCategory={notesByCategory} />
-                <slot />
-            </main>
         </div>
-    </div>
+    </nav>
 
-</body>
-</html>
+    <!-- Main Content Area -->
+    <div class="flex-1 flex overflow-hidden">
+        <!-- Categories Sidebar -->
+        <Sidebar client:load notesByCategory={notesByCategory} />
+
+        <!-- Homepage / Note Display Window -->
+        <main class="flex-1 overflow-y-auto">
+            <DynamicContent
+                client:idle
+                allNotes={allNotes}
+                notesByCategory={notesByCategory}
+            />
+            <slot />
+        </main>
+    </div>
+</div>
