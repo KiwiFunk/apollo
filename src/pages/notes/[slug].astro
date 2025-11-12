@@ -1,18 +1,8 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';
-import Head from '../../components/head.astro';
+import MainApp from '../../components/MainApp.astro';
+/*
+    [slug] lets us create dynamic routes based on note slugs
+    if we only used index, refreshing the page on a note would 404
+*/
 ---
-<html lang="en">
-
-    <Head />
-
-    <body class="bg-gray-100 text-gray-800">
-
-        <!-- If auth session, else redirect to / -->
-
-        <MainLayout>
-            <!-- Populate Slot if needed -->
-        </MainLayout>
-    </body>
-
-</html>
+<MainApp />
