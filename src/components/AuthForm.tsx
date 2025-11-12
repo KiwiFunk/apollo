@@ -15,24 +15,27 @@ export default function LoginForm() {
         const password = (form.querySelector("#password") as HTMLInputElement).value;
 
         if (mode === "register") {
-            // Handle Registration
+
+            // Handle Registration specific fields (Required by BetterAuth)
             const confirmPassword = (form.querySelector("#confirmPassword") as HTMLInputElement).value;
             if (password !== confirmPassword) {
                 alert("Passwords do not match!");
                 return;
             }
 
+            const name = (form.querySelector("#name") as HTMLInputElement)?.value || "";
+
             const { data, error } = await signUp.email({
-                name: "John Doe",               // required
-                email: "john.doe@example.com",  // required
-                password: "password1234",       // required
-                image: "https://example.com/image.png",
+                name,
+                email,
+                password, 
                 callbackURL: "https://example.com/callback",
             });
 
             if (error) {
                 alert(`Registration failed: ${error.message}`);
             } 
+            
         } else {
             // Use the correct method 'signIn.email' as per the documentation
             const { data, error } = await signIn.email({
@@ -55,6 +58,12 @@ export default function LoginForm() {
         {mode === "login" ? "Welcome Back" : "Create an Account"}
       </h2>
       <form onSubmit={handleSubmit} class="flex flex-col gap-4 w-72">
+
+        {/* Only show 'Name' field in register mode */}
+        {mode === "register" && (
+          <input type="text" id="name" placeholder="Enter your name" class="px-4 py-2 border rounded-md" required />
+        )}
+
         <input type="email" id="email" placeholder="Enter your email" class="px-4 py-2 border rounded-md" required />
         <input type="password" id="password" placeholder="Enter your password" class="px-4 py-2 border rounded-md" required />
         
