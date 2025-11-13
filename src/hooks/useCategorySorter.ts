@@ -19,7 +19,7 @@ export function useCategorySorter(notesByCategory: Record<string, Note[]>) {
   const categories = useMemo(() => {
     return Object.entries(notesByCategory).map(([name, notes]) => {
       const lastUpdated = Math.max(
-        ...notes.map(note => new Date(note.frontmatter.publishDate).getTime())
+        ...notes.map(note => new Date(note.publishDate || 0).getTime())
       );
       return { name, notes, lastUpdated };
     });
