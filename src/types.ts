@@ -11,13 +11,6 @@ export type Note = InferSelectModel<typeof notes>;
 // Inferred directly from Drizzle schema for 'users'.
 export type User = InferSelectModel<typeof user>;
 
-export interface Frontmatter {
-    title: string;
-    description: string | null; // description can be null in the DB
-    publishDate: string | null; // publishDate can be null in the DB
-    category?: string | null; // category can be null in the DB
-}
-
 export interface SearchItem {
   title: string;
   description: string;
