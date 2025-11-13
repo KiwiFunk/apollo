@@ -1,22 +1,21 @@
-import type { MarkdownInstance } from 'astro';
-import type { Frontmatter } from '../types';
+import type { Note } from '../types';
 
 // Define the props the component will accept
 interface Props {
-  allNotes: MarkdownInstance<Frontmatter>[];
-  notesByCategory: Record<string, any[]>;
+  allNotes: Note[];
+  notesByCategory: Record<string, Note[]>;
   handleLinkClick: (event: Event) => void;
 }
 
 // A reusable card component for our notes
-const NoteCard = ({ note, handleLinkClick }: { note: MarkdownInstance<Frontmatter>, handleLinkClick: (e: Event) => void }) => (
+const NoteCard = ({ note, handleLinkClick }: { note: Note, handleLinkClick: (e: Event) => void }) => (
     <a
-        href={`/notes/${note.file.split("/").pop()?.replace(".md", "")}`}
+        href={`/notes/${note.slug}`} // Use note.slug directly from the database object
         onClick={handleLinkClick}
         className="note-link block p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200"
     >
-        <h3 className="text-xl font-semibold text-gray-900">{note.frontmatter.title}</h3>
-        <p className="mt-2 text-gray-600 line-clamp-3">{note.frontmatter.description}</p>
+        <h3 className="text-xl font-semibold text-gray-900">{note.title}</h3>
+        <p className="mt-2 text-gray-600 line-clamp-3">{note.description}</p>
         <span className="mt-4 inline-block text-sm font-medium text-indigo-600">Read more &rarr;</span>
     </a>
 );
@@ -36,8 +35,13 @@ const StatCard = ({ label, value, icon }: { label: string, value: string | numbe
 export default function HomePage({ allNotes, notesByCategory, handleLinkClick }: Props) {
     // Sort notes by publish date to find the most recent ones
     const recentNotes = [...allNotes]
-        .sort((a, b) => new Date(b.frontmatter.publishDate).getTime() - new Date(a.frontmatter.publishDate).getTime())
+        .sort((a, b) => new Date(b.publishDate || 0).getTime() - new Date(a.publishDate || 0).getTime())
         .slice(0, 6); // Feature the 6 most recent notes
+
+    // Safely get the date of the latest note
+    const latestNoteDate = recentNotes.length > 0 && recentNotes[0].publishDate 
+        ? new Date(recentNotes[0].publishDate).toLocaleDateString() 
+        : 'N/A';
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -61,7 +65,7 @@ export default function HomePage({ allNotes, notesByCategory, handleLinkClick }:
                 />
                 <StatCard 
                     label="Lastest Note" 
-                    value={new Date(recentNotes[0].frontmatter.publishDate).toLocaleDateString()} 
+                    value={latestNoteDate} 
                     icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18M-4.5 12h22.5" /></svg>}
                 />
                 <StatCard 
@@ -76,7 +80,7 @@ export default function HomePage({ allNotes, notesByCategory, handleLinkClick }:
                 <h2 className="text-2xl font-semibold text-gray-800 mb-6">Recently Updated</h2>
                 <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                     {recentNotes.map((note) => (
-                        <NoteCard key={note.url} note={note} handleLinkClick={handleLinkClick} />
+                        <NoteCard key={note.id} note={note} handleLinkClick={handleLinkClick} />
                     ))}
                 </div>
             </div>
