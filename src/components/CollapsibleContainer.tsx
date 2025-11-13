@@ -48,9 +48,9 @@ export default function CollapsibleContainer({ category, notes }: Props) {
       >
         <ul class="pt-1 pb-2 ml-2 space-y-2 border-l border-gray-300">
             {notes.map(note => (
-                <li key={note.url}>
-                    <a href={note.url} class="block pl-4 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-r-lg py-1 transition-colors">
-                        {note.frontmatter.title}
+                <li key={note.slug}>
+                    <a href={note.slug} class="block pl-4 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-r-lg py-1 transition-colors">
+                        {note.title}
                     </a>
                 </li>
             ))}
