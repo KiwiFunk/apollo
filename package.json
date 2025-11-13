@@ -9,7 +9,8 @@
     "astro": "astro",
     "start": "node dist/server/entry.mjs",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "node --loader ts-node/esm scripts/migrate.ts"
+    "db:migrate": "node --loader ts-node/esm scripts/migrate.ts",
+    "seed": "npx tsx scripts/seed.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.10",
