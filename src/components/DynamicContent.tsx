@@ -1,13 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
-import type { MarkdownInstance } from 'astro'; 
-import type { Frontmatter, AppNote } from '../types';
+import type { Note, SelectedNote } from '../types';
 import HomePage from './HomePage';
 import StatsBar from './StatsBar';
-
-interface LoadedNote {
-    frontmatter: Frontmatter;
-    htmlContent: string;
-}
 
 // Dispatch an event to notify of content changes
 const dispatchClearSearch = () => {
@@ -15,14 +9,14 @@ const dispatchClearSearch = () => {
     window.dispatchEvent(event);
 };
 
-export default function DynamicContent({ allNotes, notesByCategory }: { allNotes: AppNote[], notesByCategory: Record<string, AppNote[]> }) {
-    const [activeNote, setActiveNote] = useState<LoadedNote | null>(null);
+export default function DynamicContent({ allNotes, notesByCategory }: { allNotes: Note[], notesByCategory: Record<string, Note[]> }) {
+    const [activeNote, setActiveNote] = useState<SelectedNote | null>(null);
 
     const loadNote = async (slug: string) => {
         try {
             const response = await fetch(`/api/notes/${slug}`);
             if (!response.ok) throw new Error('Note not found');
-            const noteData: LoadedNote = await response.json();
+            const noteData: SelectedNote = await response.json();
             setActiveNote(noteData);
             dispatchClearSearch();      // Clear search when a note is loaded
         } catch (error) {
@@ -87,7 +81,7 @@ export default function DynamicContent({ allNotes, notesByCategory }: { allNotes
     if (activeNote) {
         return (
             <div>
-                <StatsBar frontmatter={activeNote.frontmatter} htmlContent={activeNote.htmlContent} handleBackClick={handleBackClick} />
+                <StatsBar metadata={activeNote.metadata} htmlContent={activeNote.htmlContent} handleBackClick={handleBackClick} />
                 <article className="prose prose-slate lg:prose-l max-w-5xl mx-auto">                
                     <div class="p-12" dangerouslySetInnerHTML={{ __html: activeNote.htmlContent }} />
                 </article>

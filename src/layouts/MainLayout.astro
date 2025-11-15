@@ -34,17 +34,22 @@ const searchList = allNotes.map((note) => ({
     content: note.content || "",
 }));
 
-const notesByCategory = allNotes.reduce(
-    (acc: Record<string, Note[]>, note: Note) => {
-        const category = note.category || "Uncategorized";
-        if (!acc[category]) {
-            acc[category] = [];
-        }
-        acc[category].push(note);
-        return acc;
-    },
-    {},
-);
+// Create an object to hold notes categorized by their category
+const notesByCategory = allNotes.reduce((categoryMap: Record<string, Note[]>, note: Note) => {
+    // Determine the category of the note, default to "Uncategorized" if not present
+    const category = note.category || "Uncategorized";
+
+    // Initialize the category array if it doesn't exist yet
+    if (!categoryMap[category]) {
+        categoryMap[category] = [];
+    }
+
+    // Add the current note to the appropriate category
+    categoryMap[category].push(note);
+
+    return categoryMap;
+}, {}); // Initial value is an empty object
+
 ---
 
 <div class="flex flex-col h-screen">

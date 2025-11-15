@@ -34,7 +34,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
         const htmlContent = marked(note.content || ''); // Use marked on the content
 
         const responseData = {
-            frontmatter: {
+            metadata: {
                 title: note.title,
                 description: note.description,
                 // Ensure publishDate is handled correctly if it's null

@@ -1,16 +1,16 @@
 import { useState } from 'preact/hooks';
-import type { Frontmatter } from "../types";
+import type { SelectedNote } from "../types";
 
-export default function StatsBar({ frontmatter, htmlContent, handleBackClick }: { frontmatter: Frontmatter, htmlContent: string, handleBackClick: () => void }) {
+export default function StatsBar({ metadata, htmlContent, handleBackClick }: { metadata: SelectedNote['metadata'], htmlContent: string, handleBackClick: () => void }) {
 
     // State to manage the visibility of the stats section
     const [isOpen, setIsOpen] = useState(true);
 
     // Deconstruct frontmatter to get title, category and publish_date
-    const { title, publishDate, category } = frontmatter;
+    const { title, date, category } = metadata;
 
     // Properly format the date for human eyes
-    const formattedDate = new Date(publishDate).toLocaleDateString('en-GB', {
+    const formattedDate = new Date(date).toLocaleDateString('en-GB', {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',

@@ -18,3 +18,14 @@ export interface SearchItem {
   slug: string;
   content: string;
 }
+
+export interface SelectedNote {
+    metadata: {
+        title: string;
+        date: string;
+        category?: string;
+        tags?: string[];
+    };
+    // Markdown is parsed to HTML by the API route
+    htmlContent: string;
+}
