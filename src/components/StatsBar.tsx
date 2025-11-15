@@ -7,10 +7,10 @@ export default function StatsBar({ metadata, htmlContent, handleBackClick }: { m
     const [isOpen, setIsOpen] = useState(true);
 
     // Deconstruct frontmatter to get title, category and publish_date
-    const { title, date, category } = metadata;
+    const { title, publishDate, category } = metadata;
 
     // Properly format the date for human eyes
-    const formattedDate = new Date(date).toLocaleDateString('en-GB', {
+    const formattedDate = new Date(publishDate).toLocaleDateString('en-GB', {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',

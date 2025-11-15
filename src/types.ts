@@ -22,7 +22,7 @@ export interface SearchItem {
 export interface SelectedNote {
     metadata: {
         title: string;
-        date: string;
+        publishDate: Date;
         category?: string;
         tags?: string[];
     };
