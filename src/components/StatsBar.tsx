@@ -43,7 +43,7 @@ export default function StatsBar({ metadata, htmlContent, handleBackClick }: { m
                 ${isOpen ? 'max-h-96' : 'max-h-0'}
             `}>
                 {/* Upper Section */}
-                <div class="flex items-center justify-between px-7 pt-4">
+                <div class="flex items-center justify-between px-7 p-4">
 
                     <div>
                         <h4 class="text-gray-400 text-xs font-semibold uppercase tracking-widest">Note Title</h4>
@@ -68,22 +68,21 @@ export default function StatsBar({ metadata, htmlContent, handleBackClick }: { m
                         </span>
                     </div>
                 </div>
-
-                <div class="border-t border-gray-200 my-4" />
             </div>
+
+            <div class="border-t border-gray-200" />
     
             {/* Lower Section */}
-            <div class={`h-8 flex justify-between px-7 transition-all duration-200 ease-in-out ${!isOpen ? 'mt-4' : 'mt-0'}`}>
+            <div class={`h-12 flex justify-between px-7 transition-all duration-200 ease-in-out`}>
                 {/* Breadcrumbs */}
-                <div class="flex flex-row gap-4 items-baseline">
+                <div class="flex flex-row gap-x-4 items-center">
                     <button onClick={handleBackClick} className="text-indigo-600 text-xs font-semibold uppercase tracking-wider hover:underline cursor-pointer">
                         &larr; Home
                     </button>
-
-                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider m-0 mb-4">{ category }</p>
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider m-0">{ category }</p>
                 </div>
 
-                <div class="flex flex-row gap-4 items-center">
+                <div class="flex flex-row gap-x-4 items-center">
                     {/* Edit Toggle */}
                     <ToggleTab onChange={(mode) => console.log('Selected:', mode)} />
 
@@ -96,7 +95,7 @@ export default function StatsBar({ metadata, htmlContent, handleBackClick }: { m
                             stroke-width="2" 
                             stroke="currentColor" 
                             className={`w-4 h-4 cursor-pointer transition-transform duration-400 ${!isOpen ? 'rotate-180' : ''}`}
-                            >
+                        >
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 15.75L12 8.25l-7.5 7.5" />
                         </svg>
                     </div>

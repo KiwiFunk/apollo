@@ -13,7 +13,7 @@ export default function HardwareToggle({ onChange }: { onChange?: (mode: "ON" | 
   return (
     <div
       onClick={toggle}
-      class="relative aspect-3/1 h-[85%] bg-gray-200 rounded p-1 cursor-pointer select-none overflow-hidden"
+      class="relative aspect-3/1 h-[66%] bg-gray-200 rounded p-1 cursor-pointer select-none overflow-hidden"
     >
       {/* Accent Fill */}
       <div
