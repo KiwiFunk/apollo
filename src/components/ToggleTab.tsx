@@ -1,6 +1,7 @@
 import { useState } from 'preact/hooks';
 import clsx from 'clsx';
 
+// Accept callback to handle mode change
 export default function HardwareToggle({ onChange }: { onChange?: (mode: "ON" | "OFF") => void }) {
   const [on, setOn] = useState(false);
 
