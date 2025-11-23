@@ -1,0 +1,19 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro"
+import AuthForm from "../components/AuthForm.tsx"
+---
+<SiteLayout title="Apollo - Sign In">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="w-full max-w-md">
+
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-gray-900">apollo</h1>
+                <p class="mt-2 text-lg text-gray-600">
+                    Your personal knowledge base.
+                </p>
+            </div>
+
+            <AuthForm client:load />
+        </div>
+    </div>
+</SiteLayout>
