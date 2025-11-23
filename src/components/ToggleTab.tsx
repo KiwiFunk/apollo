@@ -13,7 +13,7 @@ export default function HardwareToggle({ onChange }: { onChange?: (mode: "ON" | 
   return (
     <div
       onClick={toggle}
-      class="relative aspect-3/1 h-[66%] bg-gray-200 rounded p-1 cursor-pointer select-none overflow-hidden"
+      class="relative inset-shadow-2xs aspect-[2.6/1] h-[66%] bg-gray-100 rounded p-1 cursor-pointer select-none overflow-hidden"
     >
       {/* Accent Fill */}
       <div
@@ -31,7 +31,7 @@ export default function HardwareToggle({ onChange }: { onChange?: (mode: "ON" | 
         )}
       >
         {/* Slider */}
-        <div class="bg-gray-100 rounded shadow-md w-[18%] h-[90%] z-1000" />
+        <div class="bg-white rounded shadow-md w-[18%] h-[90%] z-1000" />
       </div>
 
       {/* Label */}
