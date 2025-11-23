@@ -1,0 +1,50 @@
+---
+import type { Note } from "../types";
+
+import Search from "../components/Search.tsx";
+import BurgerButton from "../components/BurgerButton.tsx";
+import LogoutButton from "../components/LogoutButton.tsx";
+
+const { notes } = Astro.props as { notes: Note[] };
+
+// Normalize notes for search functionality
+const searchList = notes.map((note) => ({
+    title: note.title,
+    description: note.description || "",
+    category: note.category || "Uncategorized",
+    slug: note.slug,
+    content: note.content || "",
+}));
+---
+
+<nav class="bg-white border-b border-gray-200 w-full shrink-0 shadow-sm">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative flex items-center justify-between h-16">
+            <!-- Conditional Branding/Burger Menu -->
+            <div class="flex items-center">
+                <!-- Burger Menu Icon For Mobile -->
+                <BurgerButton client:load />
+
+                <!-- Branding for Desktop -->
+                <div class="hidden lg:block absolute">
+                    <span class="text-2xl font-bold text-gray-900">apollo</span>
+                </div>
+            </div>
+
+            <!-- Centered Search Bar -->
+            <div class="flex-1 flex justify-center px-2">
+                <div class="max-w-md w-full lg:max-w-xl">
+                    <label for="search" class="sr-only">Search</label>
+                    <div class="relative">
+                        <Search client:load searchList={searchList} />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logout Button using Better-Auth endpoint -->
+            <div class="">
+                <LogoutButton client:load />
+            </div>
+        </div>
+    </div>
+</nav>

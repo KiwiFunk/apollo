@@ -3,11 +3,10 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 import type { Note } from "../types";
 
 // Import Components
-import Search from "../components/Search.tsx";
 import DynamicContent from "../components/DynamicContent.tsx";
-import BurgerButton from "../components/BurgerButton.tsx";
 import Sidebar from "../components/Sidebar.tsx";
-import LogoutButton from "../components/LogoutButton.tsx";
+import Navbar from "../components/Navbar.astro";
+
 
 import { db } from "../db"; // Import the Drizzle client
 import { notes as notesTable } from "../db/schema"; // Import the notes table schema
@@ -26,15 +25,6 @@ const allNotes: Note[] = await db
     .from(notesTable)
     .where(eq(notesTable.userId, user.id))
     .orderBy(desc(notesTable.publishDate));
-
-// Normalize notes for search functionality
-const searchList = allNotes.map((note) => ({
-    title: note.title,
-    description: note.description || "",
-    category: note.category || "Uncategorized",
-    slug: note.slug,
-    content: note.content || "",
-}));
 
 // Create an object to hold notes categorized by their category
 const notesByCategory = allNotes.reduce(
@@ -59,41 +49,7 @@ const notesByCategory = allNotes.reduce(
 <SiteLayout title="Apollo - Home">
     <div class="flex flex-col h-screen">
         <!-- Navbar -->
-        <nav
-            class="bg-white border-b border-gray-200 w-full shrink-0 shadow-sm"
-        >
-            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="relative flex items-center justify-between h-16">
-                    <!-- Conditional Branding/Burger Menu -->
-                    <div class="flex items-center">
-                        <!-- Burger Menu Icon For Mobile -->
-                        <BurgerButton client:load />
-
-                        <!-- Branding for Desktop -->
-                        <div class="hidden lg:block absolute">
-                            <span class="text-2xl font-bold text-gray-900"
-                                >apollo</span
-                            >
-                        </div>
-                    </div>
-
-                    <!-- Centered Search Bar -->
-                    <div class="flex-1 flex justify-center px-2">
-                        <div class="max-w-md w-full lg:max-w-xl">
-                            <label for="search" class="sr-only">Search</label>
-                            <div class="relative">
-                                <Search client:load searchList={searchList} />
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Logout Button using Better-Auth endpoint -->
-                    <div class="">
-                        <LogoutButton client:load />
-                    </div>
-                </div>
-            </div>
-        </nav>
+        <Navbar client:load notes={allNotes} />
 
         <!-- Main Content Area -->
         <div class="flex-1 flex overflow-hidden">
