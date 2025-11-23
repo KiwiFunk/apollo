@@ -9,7 +9,7 @@ const dispatchClearSearch = () => {
     window.dispatchEvent(event);
 };
 
-export default function DynamicContent({ allNotes, notesByCategory }: { allNotes: Note[], notesByCategory: Record<string, Note[]> }) {
+export default function DynamicContent({ userNotes, notesByCategory }: { userNotes: Note[], notesByCategory: Record<string, Note[]> }) {
     const [activeNote, setActiveNote] = useState<SelectedNote | null>(null);
 
     const loadNote = async (slug: string) => {
@@ -90,6 +90,6 @@ export default function DynamicContent({ allNotes, notesByCategory }: { allNotes
     }
 
     return (
-        <HomePage allNotes={allNotes} notesByCategory={notesByCategory} handleLinkClick={handleLinkClick} />
+        <HomePage userNotes={userNotes} notesByCategory={notesByCategory} handleLinkClick={handleLinkClick} />
     );
 }

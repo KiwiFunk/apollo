@@ -20,14 +20,14 @@ if (!user) return Astro.redirect("/auth");
 
 // Use Drizzle query builder to fetch notes. WHERE userId matches the current User's ID
 // Type-safe and returns a `Note[]` array.
-const allNotes: Note[] = await db
+const userNotes: Note[] = await db
     .select()
     .from(notesTable)
     .where(eq(notesTable.userId, user.id))
     .orderBy(desc(notesTable.publishDate));
 
 // Create an object to hold notes categorized by their category
-const notesByCategory = allNotes.reduce(
+const notesByCategory = userNotes.reduce(
     (categoryMap: Record<string, Note[]>, note: Note) => {
         // Determine the category of the note, default to "Uncategorized" if not present
         const category = note.category || "Uncategorized";
@@ -49,7 +49,7 @@ const notesByCategory = allNotes.reduce(
 <SiteLayout title="Apollo - Home">
     <div class="flex flex-col h-screen">
         <!-- Navbar -->
-        <Navbar client:load notes={allNotes} />
+        <Navbar client:load notes={userNotes} />
 
         <!-- Main Content Area -->
         <div class="flex-1 flex overflow-hidden">
@@ -60,7 +60,7 @@ const notesByCategory = allNotes.reduce(
             <main class="flex-1 overflow-y-auto">
                 <DynamicContent
                     client:idle
-                    allNotes={allNotes}
+                    userNotes={userNotes}
                     notesByCategory={notesByCategory}
                 />
                 <slot />
