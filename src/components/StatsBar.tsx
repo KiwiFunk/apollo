@@ -1,5 +1,7 @@
 import { useState } from 'preact/hooks';
 import type { SelectedNote } from "../types";
+import ToggleTab from '../components/ToggleTab.tsx';
+
 
 export default function StatsBar({ metadata, htmlContent, handleBackClick }: { metadata: SelectedNote['metadata'], htmlContent: string, handleBackClick: () => void }) {
 
@@ -71,7 +73,7 @@ export default function StatsBar({ metadata, htmlContent, handleBackClick }: { m
             </div>
     
             {/* Lower Section */}
-            <div class={`flex justify-between px-7 transition-all duration-200 ease-in-out ${!isOpen ? 'mt-4' : 'mt-0'}`}>
+            <div class={`h-8 flex justify-between px-7 transition-all duration-200 ease-in-out ${!isOpen ? 'mt-4' : 'mt-0'}`}>
                 {/* Breadcrumbs */}
                 <div class="flex flex-row gap-4 items-baseline">
                     <button onClick={handleBackClick} className="text-indigo-600 text-xs font-semibold uppercase tracking-wider hover:underline cursor-pointer">
@@ -81,18 +83,23 @@ export default function StatsBar({ metadata, htmlContent, handleBackClick }: { m
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider m-0 mb-4">{ category }</p>
                 </div>
 
-                {/* Show/Hide Toggle */}
-                <div onClick={handleToggle} role="button">
-                    <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        fill="none" 
-                        viewBox="0 0 24 24" 
-                        stroke-width="2" 
-                        stroke="currentColor" 
-                        className={`w-4 h-4 cursor-pointer transition-transform duration-400 ${!isOpen ? 'rotate-180' : ''}`}
-                        >
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 15.75L12 8.25l-7.5 7.5" />
-                    </svg>
+                <div class="flex flex-row gap-4 items-center">
+                    {/* Edit Toggle */}
+                    <ToggleTab onChange={(mode) => console.log('Selected:', mode)} />
+
+                    {/* Show/Hide Toggle */}
+                    <div onClick={handleToggle} role="button">
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke-width="2" 
+                            stroke="currentColor" 
+                            className={`w-4 h-4 cursor-pointer transition-transform duration-400 ${!isOpen ? 'rotate-180' : ''}`}
+                            >
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 15.75L12 8.25l-7.5 7.5" />
+                        </svg>
+                    </div>
                 </div>
             </div>
             
