@@ -2,7 +2,7 @@ import { useState } from 'preact/hooks';
 import clsx from 'clsx';
 
 // Accept callback to handle mode change
-export default function HardwareToggle({ onChange }: { onChange?: (mode: "ON" | "OFF") => void }) {
+export default function HardwareToggle({ onChange, Labels }: { onChange?: (mode: "ON" | "OFF") => void, Labels: { on: string, off: string } }) {
   const [on, setOn] = useState(false);
 
   const toggle = () => {
@@ -14,7 +14,7 @@ export default function HardwareToggle({ onChange }: { onChange?: (mode: "ON" | 
   return (
     <div
       onClick={toggle}
-      class="relative inset-shadow-2xs aspect-[2.5/1] h-[60%] bg-gray-100 rounded p-1 cursor-pointer select-none overflow-hidden"
+      class="relative inset-shadow-2xs aspect-[2.5/1] h-[60%] bg-gray-100 rounded p-1 cursor-pointer select-none overflow-hidden z-10"
     >
       {/* Accent Fill */}
       <div
@@ -37,7 +37,7 @@ export default function HardwareToggle({ onChange }: { onChange?: (mode: "ON" | 
 
       {/* Label */}
       <div class={clsx("absolute inset-0 flex items-center justify-center font-semibold tracking-wider pointer-events-none text-xs", on ? "text-white" : "text-gray-900")}>
-        {on ? "EDIT" : "VIEW"}
+        {on ? Labels.on : Labels.off}
       </div>
     </div>
   );

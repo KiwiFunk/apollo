@@ -84,7 +84,7 @@ export default function StatsBar({ metadata, htmlContent, handleBackClick }: { m
 
                 <div class="flex flex-row gap-x-4 items-center">
                     {/* Edit Toggle */}
-                    <ToggleTab onChange={(mode) => console.log('Selected:', mode)} />
+                    <ToggleTab onChange={(mode) => console.log('Selected:', mode)} Labels={{ on: "EDIT", off: "VIEW" }} />
 
                     {/* Show/Hide Toggle */}
                     <div onClick={handleToggle} role="button">
