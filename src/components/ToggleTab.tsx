@@ -14,7 +14,7 @@ export default function HardwareToggle({ onChange }: { onChange?: (mode: "ON" | 
   return (
     <div
       onClick={toggle}
-      class="relative inset-shadow-2xs aspect-[2.6/1] h-[66%] bg-gray-100 rounded p-1 cursor-pointer select-none overflow-hidden"
+      class="relative inset-shadow-2xs aspect-[2.5/1] h-[60%] bg-gray-100 rounded p-1 cursor-pointer select-none overflow-hidden"
     >
       {/* Accent Fill */}
       <div
@@ -27,7 +27,7 @@ export default function HardwareToggle({ onChange }: { onChange?: (mode: "ON" | 
       {/* Slider Wrapper */}
       <div
         class={clsx(
-          "absolute inset-0 flex items-center transition-all duration-300 px-1",
+          "absolute inset-0 flex items-center transition-all duration-300 px-0.5",
           on ? "justify-end" : "justify-start"
         )}
       >
