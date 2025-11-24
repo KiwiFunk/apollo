@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-export default function Button({ label, accent, onClick }: { label: string, accent?: boolean, onClick: () => void }) {
+export default function Button({ label, accent, onClick }: { label: string, accent?: boolean, onClick?: () => void }) {
     return (
         <button 
             onClick={onClick} 

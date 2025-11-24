@@ -44,11 +44,12 @@ const searchList = notes.map((note) => ({
 
             <!-- Logout Button using Better-Auth endpoint -->
             <div class="flex gap-2 lg:gap-4 items-center">
-                <Button 
-                    label="Create Note"
-                    onClick={() => console.log('Create Note Clicked')}
-                    accent={true}
-                />
+                <a href="/create">
+                    <Button
+                        label="Create Note"
+                        accent={true}
+                    />
+                </a>
                 <LogoutButton client:load />
             </div>
         </div>
