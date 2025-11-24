@@ -1,4 +1,5 @@
 import { authClient } from '../lib/auth-client';
+import Button from './Button';
 
 // https://www.better-auth.com/docs/authentication/email-password#sign-out
 export default function LogoutButton() {
@@ -14,11 +15,10 @@ export default function LogoutButton() {
   };
 
   return (
-    <button 
-      onClick={handleLogout} 
-      class="text-sm font-semibold text-gray-600 hover:text-indigo-600 bg-transparent border-none p-0 cursor-pointer"
-    >
-      Logout
-    </button>
+    <Button 
+      label="Logout"
+      onClick={handleLogout}
+      accent={false}
+    />
   );
 }

@@ -32,11 +32,11 @@ export default function HardwareToggle({ onChange, Labels }: { onChange?: (mode:
         )}
       >
         {/* Slider */}
-        <div class="bg-white rounded shadow-md w-[18%] h-[90%] z-1000" />
+        <div class="bg-white rounded shadow-md w-[18%] h-[85%] z-1000" />
       </div>
 
       {/* Label */}
-      <div class={clsx("absolute inset-0 flex items-center justify-center font-semibold tracking-wider pointer-events-none text-xs", on ? "text-white" : "text-gray-900")}>
+      <div class={clsx("absolute inset-0 flex items-center justify-center font-semibold tracking-wider pointer-events-none text-xs", on ? "text-white" : "text-gray-700")}>
         {on ? Labels.on : Labels.off}
       </div>
     </div>
