@@ -68,9 +68,13 @@ export default function StatsBar({ metadata, htmlContent, handleBackClick }: { m
                         </span>
                     </div>
                 </div>
+
+                {/* Divider */}
+                <div class="border-t border-gray-200" />
+
             </div>
 
-            <div class="border-t border-gray-200" />
+
     
             {/* Lower Section */}
             <div class={`h-12 flex justify-between px-7 transition-all duration-200 ease-in-out`}>
