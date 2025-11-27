@@ -18,13 +18,18 @@ const { user } = Astro.locals;
 // If there is no session/user, redirect to /auth
 if (!user) return Astro.redirect("/auth");
 
-// Use Drizzle query builder to fetch notes. WHERE userId matches the current User's ID
-// Type-safe and returns a `Note[]` array.
-const userNotes: Note[] = await db
-    .select()
-    .from(notesTable)
-    .where(eq(notesTable.userId, user.id))
-    .orderBy(desc(notesTable.publishDate));
+// Function to fetch notes for the authenticated user
+const getNotes = async () => {
+    // Fetch notes for the authenticated user
+    const response = await fetch(`/api/notes`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch notes");
+    }
+    return response.json();
+};
+
+// Fetch user notes
+const userNotes: Note[] = await getNotes();
 
 // Create an object to hold notes categorized by their category
 const notesByCategory = userNotes.reduce(
