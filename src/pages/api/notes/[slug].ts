@@ -4,6 +4,8 @@ import { db } from '../../../db';                   // Import central Drizzle cl
 import { note_metadata } from '../../../db/schema'; // Import the main note_metadata table 
 import { eq, and } from 'drizzle-orm';              // Import the 'equals' & 'and' operator from Drizzle
 
+// API Route to fetch a note by slug for the authenticated user
+
 // Get locals from context
 export const GET: APIRoute = async ({ params, locals }) => {
 
