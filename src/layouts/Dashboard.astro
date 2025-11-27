@@ -1,0 +1,70 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import type { Note } from "../types";
+
+// Import Components
+import DynamicContent from "../components/DynamicContent.tsx";
+import Sidebar from "../components/Sidebar.tsx";
+import Navbar from "../components/Navbar.astro";
+
+
+import { db } from "../db"; // Import the Drizzle client
+import { notes as notesTable } from "../db/schema"; // Import the notes table schema
+import { desc, eq } from "drizzle-orm"; // Import descending for sorting, and eq (equals) operator
+
+// Get the authenticated user from Astro.locals/Our Middleware
+const { user } = Astro.locals;
+
+// If there is no session/user, redirect to /auth
+if (!user) return Astro.redirect("/auth");
+
+// Function to fetch notes for the authenticated user
+const getNotes = async () => {
+    // Fetch notes for the authenticated user
+    const response = await fetch(`/api/notes`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch notes");
+    }
+    return response.json();
+};
+
+// Fetch user notes
+const userNotes: Note[] = await getNotes();
+
+// Create an object to hold notes categorized by their category
+const notesByCategory = userNotes.reduce(
+    (categoryMap: Record<string, Note[]>, note: Note) => {
+        // Determine the category of the note, default to "Uncategorized" if not present
+        const category = note.category || "Uncategorized";
+
+        // Initialize the category array if it doesn't exist yet
+        if (!categoryMap[category]) {
+            categoryMap[category] = [];
+        }
+
+        // Add the current note to the appropriate category
+        categoryMap[category].push(note);
+
+        return categoryMap;
+    },
+    {},
+); // Initial value is an empty object
+---
+
+<SiteLayout title="Apollo - Home">
+    <div class="flex flex-col h-screen">
+        <!-- Navbar -->
+        <Navbar notes={userNotes} />
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Categories Sidebar -->
+            <Sidebar client:load notesByCategory={notesByCategory} />
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto">
+                <slot />
+            </main>
+        </div>
+    </div>
+</SiteLayout>
