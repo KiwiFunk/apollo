@@ -3,10 +3,11 @@
 */
 
 import type { InferSelectModel } from 'drizzle-orm';
-import type { notes, user } from './db/schema';
+import type { note_metadata, note_content, user } from './db/schema';
 
-// Inferred directly from Drizzle schema for 'notes'.
-export type Note = InferSelectModel<typeof notes>;
+// Infer from Drizzle Schema
+export type NoteMeta = InferSelectModel<typeof note_metadata>;
+export type NoteContent = InferSelectModel<typeof note_content>;
 
 // Inferred directly from Drizzle schema for 'users'.
 export type User = InferSelectModel<typeof user>;
