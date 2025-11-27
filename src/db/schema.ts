@@ -1,7 +1,10 @@
 import { pgTable, serial, text, timestamp, varchar, boolean } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
-// Notes Table
-export const notes = pgTable('notes', {
+// NOTE TABLE DEFINITIONS
+
+// Note Metadata Table (Parent Table)
+export const note_metadata = pgTable('note_metadata', {
   id: serial('id').primaryKey(),
   userId: text('user_id')
     .notNull()
@@ -11,10 +14,35 @@ export const notes = pgTable('notes', {
   description: text('description'),
   publishDate: timestamp('publish_date', { mode: 'date' }),
   category: text('category'),
+});
+
+// Note Content Table (Child Table enforcing 1:1)
+export const note_content = pgTable('note_content', {
+  noteId: serial('note_id') 
+    .notNull()
+    .references(() => note_metadata.id, { onDelete: 'cascade' })
+    .primaryKey(), // 👈 Ensure 1:1 constraint
   content: text('content'),
 });
 
-// Better-Auth tables
+// Drizzle Helpers for relations
+// These definitions are necessary for Drizzle's relational query methods (e.g., .with()).
+
+export const noteMetadataRelations = relations(note_metadata, ({ one }) => ({
+  content: one(note_content, {
+    fields: [note_metadata.id],
+    references: [note_content.noteId],
+  }),
+}));
+
+export const noteContentRelations = relations(note_content, ({ one }) => ({
+  metadata: one(note_metadata, {
+    fields: [note_content.noteId],
+    references: [note_metadata.id],
+  }),
+}));
+
+// BETTER-AUTH TABLE DEFINITIONS
 
 // User profile info
 export const user = pgTable('user', {
