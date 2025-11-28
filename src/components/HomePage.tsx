@@ -1,4 +1,6 @@
 import type { Note } from '../types';
+import { useStore } from '@nanostores/preact';
+import { $notesStore } from '../stores/notesStore';
 
 // A reusable card component for our notes
 const NoteCard = ({ note }: { note: Note }) => (
