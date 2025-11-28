@@ -1,12 +1,12 @@
 import type { APIRoute } from 'astro';
-import { db } from '../../../db';                   // Import central Drizzle client
-import { note_metadata } from '../../../db/schema'; // Import the main note_metadata table
-import { eq, and } from 'drizzle-orm';              // Import Drizzle operators for comparison and sorting
+import { db } from '../../db';                      // Import central Drizzle client
+import { note_metadata } from '../../db/schema';    // Import the main note_metadata table
+import { eq, and, desc } from 'drizzle-orm';        // Import Drizzle operators for comparison and sorting
 
 // GET all notes for a logged in user (This fetches only the metadata, not the linked note_content table)
 export const GET: APIRoute = async ({ locals }) => {
 
-    const { user } = locals;    // Get current authenticated user from middleware
+    const { user } = locals;                        // Get current authenticated user from middleware
 
     // Check if the user is authed. If !user, return 401 Unauthorized
     if (!user) {
@@ -18,7 +18,7 @@ export const GET: APIRoute = async ({ locals }) => {
         const noteMetadata = await db.select()
             .from(note_metadata)                        // Select from note_metadata table
             .where(eq(note_metadata.userId, user.id))   // Filter results to include ONLY notes owned by the authenticated user
-            .orderBy(note_metadata.publishDate.desc()); // Order notes by publish date descending
+            .orderBy(desc(note_metadata.publishDate));  // Order notes by publish date descending
 
         // Return array of note metadata objects as JSON response
         return new Response(JSON.stringify(noteMetadata), {

@@ -15,8 +15,14 @@ if (!user) return Astro.redirect("/auth");
 
 // Function to fetch notes for the authenticated user
 const getNotes = async () => {
-    // Fetch notes for the authenticated user
-    const response = await fetch(`${Astro.url.origin}/api/notes`);
+    // Pass cookies for authentication (e.g., session token)
+    const cookies = Astro.request.headers.get('cookie');
+    
+    const response = await fetch(`${Astro.url.origin}/api/notes`, {
+        headers: {
+            'cookie': cookies || ''
+        }
+    });
     if (!response.ok) {
         throw new Error("Failed to fetch notes");
     }
