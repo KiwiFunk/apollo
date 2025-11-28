@@ -15,6 +15,13 @@ interface Props {
 }
 
 export default function Search() {
+
+  // Re-render when notesStore changes
+  const noteState = useStore($notesStore);
+
+  // Get the normalized list for searching from the global store
+  const searchList = noteState.normalizedList;
+
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<FuseResult<SearchItem>[]>([]);
 
@@ -24,12 +31,18 @@ export default function Search() {
       keys: [
         { name: 'title', weight: 2 },       // Give title matches more weight
         { name: 'description', weight: 1 },
-        { name: 'content', weight: 0.5 },   // Give full content matches less weight
+        { name: 'category', weight: 0.5 },   // Give cat matches less weight
       ],
       includeMatches: true,                 // This is useful for highlighting matches
       minMatchCharLength: 2,
       threshold: 0.4,                       // Adjust this for more/less fuzzy matches (0=perfect, 1=anything)
     };
+
+    // Ensure we only create the Fuse instance if the list has data
+    if (searchList.length === 0) {
+        return null;
+    }
+
     return new Fuse(searchList, options);
   }, [searchList]);
 
@@ -51,7 +64,8 @@ export default function Search() {
   // Debounce the search input to avoid searching on every single keystroke
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (query.length > 1) {
+      // Make sure query is >1 and fuse instance is ready
+      if (query.length > 1 && fuse) {
         const searchResults = fuse.search(query);
         setResults(searchResults);
       } else {
@@ -82,6 +96,7 @@ export default function Search() {
         onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
         placeholder="Search notes..."
         class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        disabled={searchList.length === 0}
       />
 
       {/* Clear Button */}
