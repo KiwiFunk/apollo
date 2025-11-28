@@ -6,21 +6,15 @@ import { useStore } from '@nanostores/preact';
 import { $notesStore } from '../stores/notesStore';
 import type { NormalizedNoteMeta } from '../types';
 
-// Define the shape of the data to search
-type SearchItem = {
-  title: string;
-  description: string;
-  category: string;
-  slug: string;
-  content: string; // Raw markdown content
-};
+// Search Item structure is the same as Normalized Note Data
+type SearchItem = NormalizedNoteMeta;
 
 // Define props the component will receive
 interface Props {
   searchList: SearchItem[];
 }
 
-export default function Search({ searchList }: Props) {
+export default function Search() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<FuseResult<SearchItem>[]>([]);
 
