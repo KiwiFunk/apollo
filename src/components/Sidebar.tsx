@@ -2,10 +2,9 @@ import CollapsibleContainer from './CollapsibleContainer.tsx';
 import { useCategorySorter } from '../hooks/useCategorySorter';
 import { useSidebarState } from '../hooks/useSidebarState';
 
-// Define Props type
-interface Props {
-  notesByCategory: Record<string, any[]>;
-}
+// Global noteStore related imports
+import { useStore } from '@nanostores/preact';
+import { $notesStore } from '../stores/notesStore';
 
 // Helper component for the sort button UI
 const SortButton = ({ sortType, onClick }: { sortType: string, onClick: () => void }) => {
@@ -26,7 +25,11 @@ const SortButton = ({ sortType, onClick }: { sortType: string, onClick: () => vo
   );
 };
 
-export default function Sidebar({ notesByCategory }: Props) {
+export default function Sidebar() {
+
+  // Get required data from Global Store
+  const noteState = useStore($notesStore); // useStore causes re-render when notesStore changes
+  const notesByCategory = noteState.categorized;
   
   // Use custom hooks to manage all state and logic
   const { isOpen, sidebarRef, handleContentClick, close } = useSidebarState();
