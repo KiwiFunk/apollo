@@ -7,12 +7,6 @@ import type { NoteMeta } from "../types";
 import Sidebar from "../components/Sidebar.tsx";
 import Navbar from "../components/Navbar.astro";
 
-// Get the authenticated user from Astro.locals/Our Middleware
-const { user } = Astro.locals;
-
-// If there is no session/user, redirect to /auth
-if (!user) return Astro.redirect("/auth");
-
 // Function to fetch notes for the authenticated user
 const getNotes = async () => {
     // Pass cookies for authentication (e.g., session token)
