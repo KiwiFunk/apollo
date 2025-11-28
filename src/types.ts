@@ -8,9 +8,25 @@ import type { note_metadata, note_content, user } from './db/schema';
 // Infer from Drizzle Schema
 export type NoteMeta = InferSelectModel<typeof note_metadata>;
 export type NoteContent = InferSelectModel<typeof note_content>;
-
-// Inferred directly from Drizzle schema for 'users'.
 export type User = InferSelectModel<typeof user>;
+
+export type NotesByCategoryMap = Record<string, NoteMeta[]>;
+
+// Stripped/Normalized Metadata for Fuse.js
+export interface NormalizedNoteMeta {
+    id: number;
+    slug: string;
+    title: string;
+    description: string | null;
+    category: string | null;
+    //Exclude date/userId since Fuse.js doesn't need them
+}
+
+export interface NoteStoreState {
+    list: NoteMeta[];                      // Raw data array
+    normalizedList: NormalizedNoteMeta[];  // Array optimized for Fuse.js
+    categorized: NotesByCategoryMap;       // Mapped by category
+}
 
 export interface SearchItem {
   title: string;
