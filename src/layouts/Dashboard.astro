@@ -28,14 +28,18 @@ const userNotes: NoteMeta[] = await getNotes();
 ---
 
 <SiteLayout title="Apollo - Home">
+
+    <!-- Initialize the notes store with user notes -->
+    <NoteStoreInitializer initialData={userNotes} client:only="preact" />
+
     <div class="flex flex-col h-screen">
         <!-- Navbar -->
-        <Navbar notes={userNotes} />
+        <Navbar />
 
         <!-- Main Content Area -->
         <div class="flex-1 flex overflow-hidden">
             <!-- Categories Sidebar -->
-            <Sidebar client:load notesByCategory={notesByCategory} />
+            <Sidebar client:load />
 
             <!-- Main Content Area -->
             <main class="flex-1 overflow-y-auto">
