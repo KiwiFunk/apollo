@@ -1,7 +1,10 @@
 import { useState, useMemo, useEffect } from 'preact/hooks';
 import Fuse, { type FuseResult, type IFuseOptions } from 'fuse.js';
-import type { MarkdownInstance } from 'astro';
-import type { Frontmatter } from '../types';
+
+// Imports for noteStore
+import { useStore } from '@nanostores/preact';
+import { $notesStore } from '../stores/notesStore';
+import type { NormalizedNoteMeta } from '../types';
 
 // Define the shape of the data to search
 type SearchItem = {
