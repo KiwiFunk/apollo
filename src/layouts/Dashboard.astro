@@ -1,16 +1,11 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
-import type { Note } from "../types";
+import NoteStoreInitializer from "../components/NoteStoreInitializer.tsx";
+import type { NoteMeta } from "../types";
 
 // Import Components
-import DynamicContent from "../components/DynamicContent.tsx";
 import Sidebar from "../components/Sidebar.tsx";
 import Navbar from "../components/Navbar.astro";
-
-
-import { db } from "../db"; // Import the Drizzle client
-import { notes as notesTable } from "../db/schema"; // Import the notes table schema
-import { desc, eq } from "drizzle-orm"; // Import descending for sorting, and eq (equals) operator
 
 // Get the authenticated user from Astro.locals/Our Middleware
 const { user } = Astro.locals;
