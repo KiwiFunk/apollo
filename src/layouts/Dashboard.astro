@@ -17,7 +17,7 @@ if (!user) return Astro.redirect("/auth");
 const getNotes = async () => {
     // Pass cookies for authentication (e.g., session token)
     const cookies = Astro.request.headers.get('cookie');
-    
+
     const response = await fetch(`${Astro.url.origin}/api/notes`, {
         headers: {
             'cookie': cookies || ''
@@ -40,12 +40,12 @@ const userNotes: NoteMeta[] = await getNotes();
 
     <div class="flex flex-col h-screen">
         <!-- Navbar -->
-        <Navbar />
+        <Navbar transition:persist />
 
         <!-- Main Content Area -->
         <div class="flex-1 flex overflow-hidden">
             <!-- Categories Sidebar -->
-            <Sidebar client:load />
+            <Sidebar client:load transition:persist />
 
             <!-- Main Content Area -->
             <main class="flex-1 overflow-y-auto">
