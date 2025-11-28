@@ -1,6 +1,7 @@
 ---
 import Dashboard from "../../layouts/Dashboard.astro";
 import type { FullNote } from "../../types";
+import StatsBar from "../../components/StatsBar.tsx";
 
 // Get the slug from the URL params
 const { slug } = Astro.params;
@@ -56,5 +57,10 @@ if (!slug || !noteData) {
 ---
 
 <Dashboard>
-    <slot />
+    <div>
+        <StatsBar metadata={noteData.metadata} htmlContent={noteData.htmlContent} client:load />
+        <article class="prose prose-slate lg:prose-l max-w-5xl mx-auto">                
+            <div class="p-12" set:html={noteData.htmlContent} />
+        </article>
+    </div>
 </Dashboard>
