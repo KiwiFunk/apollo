@@ -36,7 +36,7 @@ export interface SearchItem {
   content: string;
 }
 
-export interface SelectedNote {
+export interface FullNote {
     metadata: {
         title: string;
         publishDate: Date;

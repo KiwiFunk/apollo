@@ -1,5 +1,58 @@
 ---
 import Dashboard from "../../layouts/Dashboard.astro";
+import type { FullNote } from "../../types";
+
+// Get the slug from the URL params
+const { slug } = Astro.params;
+
+// Get the auth'd user, redirect if not authed
+const { user } = Astro.locals;
+if (!user) return Astro.redirect("/auth");
+
+// Fetch full note data for the given slug (metadata + content)
+// Returns a FullNote object (metadata + content)
+const getNote = async (noteSlug: string): Promise<FullNote> => {
+
+    // Pass cookies for authentication (e.g., session token)
+    const cookies = Astro.request.headers.get('cookie');
+
+    // Construct the URL for fetching the note
+    const fetchUrl = `${Astro.url.origin}/api/notes/${noteSlug}`;
+    
+    const response = await fetch(fetchUrl, {
+        headers: {
+            'cookie': cookies || ''
+        }
+    });
+
+    if (response.status === 404) {
+        // Handle 404 specifically for a note not found
+        // TODO: Create a generic 404 Page
+        throw new Error(`Note not found: ${noteSlug}`); 
+    }
+    // Else handle other errors
+    if (!response.ok) {
+        throw new Error(`Failed to fetch note ${noteSlug}. Status: ${response.status}`);
+    }
+
+    return response.json();
+};
+
+// Fetch the full note data
+let noteData: FullNote | null = null;
+if (slug) {
+    try {
+        noteData = await getNote(slug);
+    } catch (error) {
+        console.error("Fatal error fetching note:", error);
+        return new Response('Note could not be loaded.', { status: 500 });
+    }
+}
+// If slug is missing, redirect or handle
+if (!slug || !noteData) {
+    return Astro.redirect("/dashboard");
+}
+
 ---
 
 <Dashboard>

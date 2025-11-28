@@ -3,7 +3,7 @@ import type { SelectedNote } from "../types";
 import ToggleTab from '../components/ToggleTab.tsx';
 
 
-export default function StatsBar({ metadata, htmlContent, handleBackClick }: { metadata: SelectedNote['metadata'], htmlContent: string, handleBackClick: () => void }) {
+export default function StatsBar({ metadata, htmlContent }: { metadata: SelectedNote['metadata'], htmlContent: string }) {
 
     // State to manage the visibility of the stats section
     const [isOpen, setIsOpen] = useState(true);
@@ -80,9 +80,12 @@ export default function StatsBar({ metadata, htmlContent, handleBackClick }: { m
             <div class={`h-12 flex justify-between px-7 transition-all duration-200 ease-in-out`}>
                 {/* Breadcrumbs */}
                 <div class="flex flex-row gap-x-4 items-center">
-                    <button onClick={handleBackClick} className="text-indigo-600 text-xs font-semibold uppercase tracking-wider hover:underline cursor-pointer">
+                    <a 
+                        href="/" 
+                        class="text-indigo-600 text-xs font-semibold uppercase tracking-wider hover:underline cursor-pointer"
+                    >
                         &larr; Home
-                    </button>
+                    </a>
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider m-0">{ category }</p>
                 </div>
 
