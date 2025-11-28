@@ -24,26 +24,7 @@ const getNotes = async () => {
 };
 
 // Fetch user notes
-const userNotes: Note[] = await getNotes();
-
-// Create an object to hold notes categorized by their category
-const notesByCategory = userNotes.reduce(
-    (categoryMap: Record<string, Note[]>, note: Note) => {
-        // Determine the category of the note, default to "Uncategorized" if not present
-        const category = note.category || "Uncategorized";
-
-        // Initialize the category array if it doesn't exist yet
-        if (!categoryMap[category]) {
-            categoryMap[category] = [];
-        }
-
-        // Add the current note to the appropriate category
-        categoryMap[category].push(note);
-
-        return categoryMap;
-    },
-    {},
-); // Initial value is an empty object
+const userNotes: NoteMeta[] = await getNotes();
 ---
 
 <SiteLayout title="Apollo - Home">
