@@ -16,7 +16,7 @@ if (!user) return Astro.redirect("/auth");
 // Function to fetch notes for the authenticated user
 const getNotes = async () => {
     // Fetch notes for the authenticated user
-    const response = await fetch(`/api/notes`);
+    const response = await fetch(`${Astro.url.origin}/api/notes`);
     if (!response.ok) {
         throw new Error("Failed to fetch notes");
     }
