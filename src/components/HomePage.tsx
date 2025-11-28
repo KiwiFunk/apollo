@@ -1,17 +1,9 @@
 import type { Note } from '../types';
 
-// Define the props the component will accept
-interface Props {
-  userNotes: Note[];
-  notesByCategory: Record<string, Note[]>;
-  handleLinkClick: (event: Event) => void;
-}
-
 // A reusable card component for our notes
-const NoteCard = ({ note, handleLinkClick }: { note: Note, handleLinkClick: (e: Event) => void }) => (
+const NoteCard = ({ note }: { note: Note }) => (
     <a
         href={`/notes/${note.slug}`} // Use note.slug directly from the database object
-        onClick={handleLinkClick}
         className="note-link block p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200"
     >
         <h3 className="text-xl font-semibold text-gray-900">{note.title}</h3>
@@ -32,7 +24,15 @@ const StatCard = ({ label, value, icon }: { label: string, value: string | numbe
     </div>
 );
 
-export default function HomePage({ userNotes, notesByCategory, handleLinkClick }: Props) {
+export default function HomePage() {
+
+    // Subscribe to Nanostore
+    const noteState = useStore($notesStore);
+
+    // Get data from store
+    const userNotes = noteState.list;
+    const notesByCategory = noteState.categorized;
+
     // Sort notes by publish date to find the most recent ones
     const recentNotes = [...userNotes]
         .sort((a, b) => new Date(b.publishDate || 0).getTime() - new Date(a.publishDate || 0).getTime())
@@ -80,7 +80,7 @@ export default function HomePage({ userNotes, notesByCategory, handleLinkClick }
                 <h2 className="text-2xl font-semibold text-gray-800 mb-6">Recently Updated</h2>
                 <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                     {recentNotes.map((note) => (
-                        <NoteCard key={note.id} note={note} handleLinkClick={handleLinkClick} />
+                        <NoteCard key={note.id} note={note} />
                     ))}
                 </div>
             </div>
