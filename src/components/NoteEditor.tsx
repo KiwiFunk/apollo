@@ -119,7 +119,7 @@ export default function NoteEditor() {
 
         try {
             // AJAX POST request
-            const response = await fetch('/api/notes/create', {
+            const response = await fetch('/api/create', {
                 method: 'POST',
                 // Tell the server we are sending plain text
                 headers: { 'Content-Type': 'text/plain' }, 
