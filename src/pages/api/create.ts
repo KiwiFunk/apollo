@@ -88,15 +88,68 @@ export const POST: APIRoute = async ({ request, locals }) => {
             return new Response("Validation Failed: Title is required.", { status: 400 });
         }
 
-        // Generate automated fields (URL Slug, Publish Date etc.)
+        // Generate UNIQUE slug
+        let baseSlug = slugify(title, { lower: true, strict: true });
+        let finalSlug = baseSlug;
+        let slugCounter = 0;
 
-        // Make sure slug is unique (Prevent routing errors)
+        while (true) {
+            const existingNote = await db.query.note_metadata.findFirst({
+                where: eq(note_metadata.slug, finalSlug),
+            });
 
-        // Send clean data to database
+            if (!existingNote) {
+                break; // Unique slug found
+            }
+            
+            slugCounter++;
+            finalSlug = `${baseSlug}-${slugCounter}`;
+        }
 
-        // Prepare data for AJAX response
+        // Generate publish date
+        const publishDate = new Date();
 
-        // Return Success Respons
+        // Start Database transaction
+        let newNoteMeta;
+
+        await db.transaction(async (tx) => {
+            // note_metadata table
+            const newMetadata = await tx.insert(note_metadata)
+                .values({
+                    userId: user.id, 
+                    slug: finalSlug,
+                    title: title,
+                    description: description,
+                    category: category,
+                    publishDate: publishDate,
+                })
+                .returning({ id: note_metadata.id, slug: note_metadata.slug, publishDate: note_metadata.publishDate });
+            
+            const noteId = newMetadata[0].id;
+            
+            // note_content table
+            await tx.insert(note_content)
+                .values({
+                    noteId: noteId,
+                    content: markdownBody,
+                });
+            
+            // Prepare data for AJAX response
+            newNoteMeta = { 
+                id: noteId,
+                slug: newMetadata[0].slug,
+                title: title,
+                description: description,
+                category: category,
+                publishDate: publishDate.toISOString(),
+            };
+        });        
+        
+        // Return Success Response
+        return new Response(JSON.stringify(newNoteMeta), {
+            status: 201, // 201 Created
+            headers: { 'Content-Type': 'application/json' },
+        });
 
     } catch (error) {
         console.error("Note creation failed: ", error);
