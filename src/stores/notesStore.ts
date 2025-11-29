@@ -111,3 +111,29 @@ export const addNote = (newNote: NoteMeta) => {
     
     console.log(`[Nanostore] Added new note: "${newNote.title}". Store size: ${newList.length}`);
 };
+
+/**
+ * Removes a deleted note's metadata from the store and updates all derived lists.
+ * @param slugToRemove The slug of the note to remove.
+ */
+export const removeNote = (slugToRemove: string) => {
+    const currentState = $notesStore.get();
+    
+    // Update raw list - Filter out the note by slug
+    const newList = currentState.list.filter(note => note.slug !== slugToRemove);
+
+    // Filter out the normalized version
+    const newNormalizedList = currentState.normalizedList.filter(note => note.slug !== slugToRemove);
+    
+    // Recalculate the entire map (simplest approach for deletion)
+    const newCategorized = getCategorizedMap(newList);
+
+    // Update the entire store state atomically
+    $notesStore.set({
+        list: newList,
+        normalizedList: newNormalizedList,
+        categorized: newCategorized,
+    });
+    
+    console.log(`[Nanostore] Removed note with slug: "${slugToRemove}". Store size: ${newList.length}`);
+};
