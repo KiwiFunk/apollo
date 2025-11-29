@@ -17,6 +17,7 @@ const dispatchClearSearch = () => {
 
 export default function CollapsibleContainer({ category, notes }: Props) {
     const [isOpen, setIsOpen] = useState(false);
+    const [hoveredSlug, setHoveredSlug] = useState<string | null>(null); // Track hovered note
 
     const toggleCollapse = () => {
         setIsOpen(prev => !prev);
@@ -56,13 +57,19 @@ export default function CollapsibleContainer({ category, notes }: Props) {
       >
         <ul class="pt-1 pb-2 ml-2 space-y-2 border-l border-gray-300">
             {notes.map(note => (
-                <li key={note.slug}>
+                <li key={note.slug}
+                  onMouseEnter={() => setHoveredSlug(note.slug)}
+                  onMouseLeave={() => setHoveredSlug(null)}
+                >
                   <div class="flex justify-between items-center text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-r-lg transition-colors">
                     <a href={`/notes/${note.slug}`} onClick={dispatchClearSearch} class="block pl-4 text-sm  py-1">
                         {note.title}
                     </a>
 
-                    <DeleteNoteButton slug={note.slug} />
+                    {hoveredSlug === note.slug && (
+                      <DeleteNoteButton slug={note.slug} />
+                    )}
+                    
                   </div>
                 </li>
             ))}
