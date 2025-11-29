@@ -124,6 +124,8 @@ export default function NoteEditor() {
                 // Tell the server we are sending plain text
                 headers: { 'Content-Type': 'text/plain' }, 
                 body: rawContent,
+                // Send cookies for auth
+                credentials: 'include',
             });
 
             if (response.status === 201) {
