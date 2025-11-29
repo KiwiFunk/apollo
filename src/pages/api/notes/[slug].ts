@@ -4,6 +4,9 @@ import { db } from '../../../db';                   // Import central Drizzle cl
 import { eq, and } from 'drizzle-orm';              // Import the 'equals' & 'and' operator from Drizzle
 import { note_metadata, note_content } from '../../../db/schema'; 
 
+import { generateDesc } from '../../../utils/markdownUtils';        // Import description generator
+import { generateUniqueSlug } from '../../../utils/markdownUtils';  // Import unique slug generator
+
 import matter from 'gray-matter';                   // Import to parse YAML frontmatter
 import slugify from 'slugify';                      // Create clean URL slugs
 
@@ -153,30 +156,30 @@ export const PUT: APIRoute = async ({ request, locals, params }) => {
 
         await db.transaction(async (tx) => {
             
-            // Find the Note ID and verify ownership
+            // Get the existing note from the DB
             const existingNote = await tx.query.note_metadata.findFirst({
                 where: eq(note_metadata.slug, slug),
             });
 
+            // If note does not exist, or is not owned by user, perform rollback
             if (!existingNote) {
                 tx.rollback(); 
                 throw new Response("Note not found.", { status: 404 });
             }
 
-            // Authorization check: User must own the note
             if (existingNote.userId !== user.id) {
                 tx.rollback();
                 throw new Response("Forbidden: You do not have permission to edit this note.", { status: 403 });
             }
             
             const noteId = existingNote.id;
-            let finalSlug = slug;
+            const originalSlug = existingNote.slug;
+            let finalSlug = originalSlug;
             
             // IF title has changed, Re-Slugify
             if (title !== existingNote.title) {
-                let baseSlug = slugify(title, { lower: true, strict: true });
-                finalSlug = baseSlug;
-                let slugCounter = 0;
+                finalSlug = await generateUniqueSlug(originalSlug, db);
+            }
             
             // Update note_metadata
             const updatedMetadata = await tx.update(note_metadata)
