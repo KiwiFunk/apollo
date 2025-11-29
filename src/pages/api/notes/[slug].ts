@@ -173,12 +173,12 @@ export const PUT: APIRoute = async ({ request, locals, params }) => {
             }
             
             const noteId = existingNote.id;
-            const originalSlug = existingNote.slug;
-            let finalSlug = originalSlug;
+            const newSlug = slugify(title, { lower: true, strict: true });
+            let finalSlug = newSlug;
             
             // IF title has changed, Re-Slugify
             if (title !== existingNote.title) {
-                finalSlug = await generateUniqueSlug(originalSlug, db);
+                finalSlug = await generateUniqueSlug(newSlug, db);
             }
             
             // Update note_metadata
