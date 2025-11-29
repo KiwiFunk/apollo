@@ -4,6 +4,7 @@ import type { NoteMeta } from '../types.ts'     //POST route returns a NoteMeta 
 // Import EasyMDE as WYSIWYG markdown editor
 import EasyMDE from 'easymde';
 import 'easymde/dist/easymde.min.css';
+import dedent from "dedent";    // Make sure the string literals have no whitespace
 
 // Import addNote for updating Nanostore
 import { addNote } from '../stores/notesStore.ts'
@@ -108,14 +109,14 @@ export default function NoteEditor() {
 
         // Assemble raw Markdown string with YAML frontmatter
         const markdownContent = mdeRef.current.value();
-        const rawContent = 
+        const rawContent = dedent(
         `---
         title: "${title.trim()}"
         description: "${description.trim()}"
         category: "${category.trim()}"
         ---
 
-        ${markdownContent}`;
+        ${markdownContent}`);
 
         try {
             // AJAX POST request
