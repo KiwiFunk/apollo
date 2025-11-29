@@ -1,5 +1,6 @@
 import { useState } from 'preact/hooks';
 import type { Note } from '../types';
+import DeleteNoteButton from './DeleteButton.tsx';
 
 // Define the shape of the props we expect
 interface Props {
@@ -55,9 +56,13 @@ export default function CollapsibleContainer({ category, notes }: Props) {
         <ul class="pt-1 pb-2 ml-2 space-y-2 border-l border-gray-300">
             {notes.map(note => (
                 <li key={note.slug}>
+                  <div class="flex space-between items-center">
                     <a href={`/notes/${note.slug}`} onClick={dispatchClearSearch} class="block pl-4 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-r-lg py-1 transition-colors">
                         {note.title}
                     </a>
+                    
+                    <DeleteNoteButton slug={note.slug}/>
+                  </div>
                 </li>
             ))}
         </ul>
