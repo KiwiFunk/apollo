@@ -4,6 +4,9 @@ import { db } from '../../../db';                   // Import central Drizzle cl
 import { eq, and } from 'drizzle-orm';              // Import the 'equals' & 'and' operator from Drizzle
 import { note_metadata, note_content } from '../../../db/schema'; 
 
+import matter from 'gray-matter';                   // Import to parse YAML frontmatter
+import slugify from 'slugify';                      // Create clean URL slugs
+
 // GET single note by slug for the logged in user
 export const GET: APIRoute = async ({ params, locals }) => {
 
@@ -115,5 +118,114 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
         // Else
         console.error("Note deletion failed:", error);
         return new Response('Internal Server Error during note deletion.', { status: 500 });
+    }
+};
+
+/** Update single note by slug for the logged in user (PUT)
+ * @param request - The incoming request object containing the updated note data in markdown format
+ * @param locals - The locals object containing the authenticated user info
+ * @param params - The route parameters containing the note slug to update
+ */
+export const PUT: APIRoute = async ({ request, locals, params }) => {
+    
+    const { user } = locals;    // Get current user from session
+    const { slug } = params;    // Get url slug from params
+
+    // Auth/Param checks
+    if (!user) return new Response("Unauthorized", { status: 401 });
+    if (!slug) return new Response("Missing note slug.", { status: 400 });
+    
+    try {
+        const rawBody = await request.text();
+        const { data: frontmatter, content: markdownBody } = matter(rawBody);
+
+        // Validate and prepare data
+        const title = frontmatter.title?.toString().trim();
+        const category = frontmatter.category?.toString().trim() || 'Uncategorized';
+        const description = frontmatter.description?.toString().trim() || generateDesc(markdownBody);
+
+        if (!title || title.length < 1) {
+            return new Response("Validation Failed: Title is required.", { status: 400 });
+        }
+
+        // Database transaction & authorization
+        let updatedNoteMeta;
+
+        await db.transaction(async (tx) => {
+            
+            // Find the Note ID and verify ownership
+            const existingNote = await tx.query.note_metadata.findFirst({
+                where: eq(note_metadata.slug, slug),
+            });
+
+            if (!existingNote) {
+                tx.rollback(); 
+                throw new Response("Note not found.", { status: 404 });
+            }
+
+            // Authorization check: User must own the note
+            if (existingNote.userId !== user.id) {
+                tx.rollback();
+                throw new Response("Forbidden: You do not have permission to edit this note.", { status: 403 });
+            }
+            
+            const noteId = existingNote.id;
+            let finalSlug = slug;
+            
+            // IF title has changed, Re-Slugify
+            if (title !== existingNote.title) {
+                let baseSlug = slugify(title, { lower: true, strict: true });
+                finalSlug = baseSlug;
+                let slugCounter = 0;
+            
+            // Update note_metadata
+            const updatedMetadata = await tx.update(note_metadata)
+                .set({
+                    title: title,
+                    description: description,
+                    category: category,
+                    slug: finalSlug,
+                    publishDate: new Date(), // Update publish date on edit
+                })
+                .where(eq(note_metadata.id, noteId))
+                .returning({ 
+                    id: note_metadata.id, 
+                    slug: note_metadata.slug, 
+                    publishDate: note_metadata.publishDate, 
+                    userId: note_metadata.userId // Include userId for the client-side NoteMeta object
+                });
+            
+            // Update note_content
+            await tx.update(note_content)
+                .set({
+                    content: markdownBody,
+                })
+                .where(eq(note_content.noteId, noteId));
+            
+            // Prepare data for AJAX response (Match NoteMeta defined in types.ts)
+            const meta = updatedMetadata[0];
+            updatedNoteMeta = { 
+                id: meta.id,
+                userId: meta.userId,
+                slug: meta.slug,
+                title: title,
+                description: description,
+                publishDate: meta.publishDate.toISOString(),
+                category: category,
+            };
+        });
+        
+        // 200 OK is standard for a successful PUT/update
+        return new Response(JSON.stringify(updatedNoteMeta), {
+            status: 200, 
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+    } catch (error) {
+        if (error instanceof Response) {
+            return error; 
+        }
+        console.error("Note update failed:", error);
+        return new Response('Internal Server Error during note update.', { status: 500 });
     }
 };
