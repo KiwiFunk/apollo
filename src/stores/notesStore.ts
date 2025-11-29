@@ -137,3 +137,36 @@ export const removeNote = (slugToRemove: string) => {
     
     console.log(`[Nanostore] Removed note with slug: "${slugToRemove}". Store size: ${newList.length}`);
 };
+
+/**
+ * UPDATES an existing note's metadata in the store and recalculates derived lists.
+ * @param updatedNote The full metadata object returned from the API PUT request.
+ */
+export const updateNote = (updatedNote: NoteMeta) => {
+    const currentState = $notesStore.get();
+    
+    // Update 'list': Replace the old note with the new one by ID/Slug
+    const newList = currentState.list.map(note => 
+        note.id === updatedNote.id ? updatedNote : note
+    );
+
+    // Sort the list by publishDate again (since update changes the date)
+    const sortedList = newList.sort((a, b) => 
+        new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
+    );
+
+    // Update 'normalizedList' for search
+    const newNormalizedList = sortedList.map(normalizeNote);
+
+    // Update 'categorized': Recalculate based on the new, sorted list
+    const newCategorized = getCategorizedMap(sortedList);
+    
+    // Update the entire store state atomically
+    $notesStore.set({
+        list: sortedList,
+        normalizedList: newNormalizedList,
+        categorized: newCategorized,
+    });
+    
+    console.log(`[Nanostore] Updated note: "${updatedNote.title}".`);
+};
