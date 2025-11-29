@@ -21,7 +21,7 @@ export const note_content = pgTable('note_content', {
   noteId: serial('note_id') 
     .notNull()
     .references(() => note_metadata.id, { onDelete: 'cascade' })
-    .primaryKey(), // 👈 Ensure 1:1 constraint
+    .primaryKey(), // Ensure 1:1 constraint
   content: text('content'),
 });
 

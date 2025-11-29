@@ -1,12 +1,10 @@
 import type { APIRoute } from 'astro';
 import { marked } from 'marked';
 import { db } from '../../../db';                   // Import central Drizzle client
-import { note_metadata } from '../../../db/schema'; // Import the main note_metadata table 
 import { eq, and } from 'drizzle-orm';              // Import the 'equals' & 'and' operator from Drizzle
+import { note_metadata, note_content } from '../../../db/schema'; 
 
-// API Route to fetch a note by slug for the authenticated user
-
-// Get locals from context
+// GET single note by slug for the logged in user
 export const GET: APIRoute = async ({ params, locals }) => {
 
     const { slug } = params;    // Get the current slug
@@ -62,5 +60,60 @@ export const GET: APIRoute = async ({ params, locals }) => {
     } catch (error) {
         console.error(error);
         return new Response('Internal Server Error', { status: 500 });
+    }
+};
+
+// DELETE single note by slug for the logged in user
+export const DELETE: APIRoute = async ({ params, locals }) => {
+    
+    const { user } = locals;    // Get current user from session cookie
+    const { slugToDelete } = params;    // Get the note slug from the URL params
+
+    // Auth and Param checks
+    if (!user) return new Response("Unauthorized", { status: 401 });
+    if (!slugToDelete) return new Response("Missing note slug.", { status: 400 });
+    try {
+        let deletedNoteId: number | null = null;
+        
+        // DB Transaction (Ensure atomicity)
+        await db.transaction(async (tx) => {
+            
+            // Check the note_metadata table for a match with the queried slug, then get its ID.
+            // Also get userId (owner) for authorization check
+            const noteToDelete = await tx.query.note_metadata.findFirst({
+                columns: { id: true, userId: true },
+                where: eq(note_metadata.slug, slugToDelete),
+            });
+
+            // Return 404 if the slug doesn't exist and rollback transaction
+            if (!noteToDelete) {
+                tx.rollback(); 
+                throw new Response("Note not found.", { status: 404 });
+            }
+
+            // Auth Check - Ensure the note belongs to the authenticated user
+            if (noteToDelete.userId !== user.id) {
+                // Return 403 Forbidden if the user is not the owner
+                tx.rollback();
+                throw new Response("Forbidden: You do not own this note.", { status: 403 });
+            }
+            // Set the note ID for deletion
+            deletedNoteId = noteToDelete.id;
+
+            // Note_content row will be auto-deleted due to ON DELETE CASCADE constraint
+            await tx.delete(note_metadata).where(eq(note_metadata.id, deletedNoteId));
+        });
+
+        // 204 No Content is the standard response for a successful DELETE
+        return new Response(null, { status: 204 });
+
+    } catch (error) {
+        // If the error came from our Response throwing *inside* the transaction
+        if (error instanceof Response) {
+            return error; 
+        }
+        // Else
+        console.error("Note deletion failed:", error);
+        return new Response('Internal Server Error during note deletion.', { status: 500 });
     }
 };
