@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState, useMemo } from 'preact/hooks';
 import type { NoteMeta } from '../types.ts'     //POST route returns a NoteMeta object
 
 // Import EasyMDE as WYSIWYG markdown editor
@@ -8,7 +8,13 @@ import 'easymde/dist/easymde.min.css';
 // Import addNote for updating Nanostore
 import { addNote } from '../stores/notesStore.ts'
 
+// Import fuse and global store for providing category/tag suggestions (future enhancement)
+import Fuse from 'fuse.js';
+import { useStore } from '@nanostores/preact';
+import { $notesStore } from '../stores/notesStore.ts';
+
 export default function NoteEditor() {
+
     const editorRef = useRef<HTMLTextAreaElement>(null);
     const mdeRef = useRef<EasyMDE | null>(null);
 
@@ -18,6 +24,33 @@ export default function NoteEditor() {
     const [category, setCategory] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [statusMessage, setStatusMessage] = useState('');
+
+    // Category suggestion state
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+
+    // Subscribe to Note Store to fetch categorized data
+    const noteState = useStore($notesStore);
+
+    // Extract unique categories for Fuse
+    const uniqueCategories = useMemo(() => {
+        // Get all keys from the categorized map (which are the categories)
+        const categories = Object.keys(noteState.categorized);
+        // Exclude the 'Uncategorized' label from suggestions
+        return categories.filter(c => c !== 'Uncategorized').map(c => ({ name: c }));
+    }, [noteState.categorized]); // Recalculate only when the categorized map changes
+
+    // Init Fuse with categories
+    const fuse = useMemo(() => {
+        return new Fuse(uniqueCategories, {
+            keys: ['name'],     // Search within the 'name' field
+            location: 0,        // Start from beginning of string
+            distance: 5,        // Shorter distance for less fuzzy match
+            tokenize: true,     // Split search pattern into words
+            matchAllTokens: false,
+            threshold: 0.2,     // Lower = more exact matches
+            ignoreLocation: true,
+        });
+    }, [uniqueCategories]); // Recalculate only when uniqueCategories changes
 
     // Initialize EasyMDE on mount (runs only on client-side)
     useEffect(() => {
@@ -39,6 +72,30 @@ export default function NoteEditor() {
             }
         };
     }, []);
+
+    // HANDLERS
+
+    const handleCategoryChange = (e: Event) => {
+        const value = e.currentTarget.value;
+        setCategory(value);
+
+        if (value.trim().length > 1) {
+            // Search Fuse for suggestions
+            const results = fuse.search(value).slice(0, 3); // Limit to 3 suggestions
+            
+            // Map the Fuse results back to just the category name string
+            setSuggestions(results.map(result => result.item.name));
+        } else {
+            // Clear suggestions if the input is nearly empty
+            setSuggestions([]);
+        }
+    };
+    
+    // Handle suggestion click
+    const handleSuggestionClick = (suggestedCategory: string) => {
+        setCategory(suggestedCategory);
+        setSuggestions([]); // Clear suggestions after selection
+    };
 
     const handleSave = async () => {
         if (!mdeRef.current || !title.trim()) {
@@ -108,7 +165,7 @@ export default function NoteEditor() {
             {statusMessage && <div className={`p-3 mb-4 rounded-lg ${statusMessage.startsWith('Error') ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>{statusMessage}</div>}
 
             {/* Guided Metadata Inputs */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <input
                     type="text"
                     placeholder="Title (Required)"
@@ -116,13 +173,30 @@ export default function NoteEditor() {
                     onInput={(e) => setTitle(e.currentTarget.value)}
                     className="p-2 border border-gray-300 rounded"
                 />
-                <input
-                    type="text"
-                    placeholder="Category (Optional)"
-                    value={category}
-                    onInput={(e) => setCategory(e.currentTarget.value)}
-                    className="p-2 border border-gray-300 rounded"
-                />
+                <div className="relative">
+                    <input
+                        type="text"
+                        placeholder="Category (Optional)"
+                        value={category}
+                        onInput={handleCategoryChange} // Use the new handler
+                        className="p-2 border border-gray-300 rounded w-full"
+                    />
+                    {suggestions.length > 0 && (
+                        <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-b shadow-lg mt-1">
+                            {suggestions.map((suggestedCategory) => (
+                                <li
+                                    key={suggestedCategory}
+                                    onClick={() => handleSuggestionClick(suggestedCategory)}
+                                    className="p-2 text-sm text-gray-700 hover:bg-indigo-100 cursor-pointer"
+                                >
+                                    {suggestedCategory}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+            </div>
+            <div className="grid grid-cols-1 gap-4 mb-4">
                 <input
                     type="text"
                     placeholder="Short Description (Optional)"
