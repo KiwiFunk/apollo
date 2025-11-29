@@ -1,7 +1,8 @@
 import type { APIRoute } from 'astro';
 import { db } from '../../db';          //Import Drizzle Client
-import { note_metadata, note_content }; // Import type definitions
 import { eq } from 'drizzle-orm';       // Import Drizzle operators
+import { note_metadata, note_content } from '../../db/schema';
+
 import matter from 'gray-matter';       // Import to parse YAML frontmatter
 import slugify from 'slugify';          // Create clean URL slugs
 
