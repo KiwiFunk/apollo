@@ -135,14 +135,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
                     content: markdownBody,
                 });
             
-            // Prepare data for AJAX response
+            // Prepare data for AJAX response (Match NoteMeta defined in types.ts)
             newNoteMeta = { 
                 id: noteId,
+                userId: user.id,
                 slug: newMetadata[0].slug,
                 title: title,
                 description: description,
-                category: category,
                 publishDate: publishDate.toISOString(),
+                category: category,
             };
         });        
         
