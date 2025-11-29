@@ -1,0 +1,1 @@
+/* Contains the markdown editor for note creation and edits. Makes use of EasyMDE to provode WYSIWYG editor */
