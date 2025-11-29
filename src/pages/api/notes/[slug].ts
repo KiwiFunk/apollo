@@ -67,11 +67,11 @@ export const GET: APIRoute = async ({ params, locals }) => {
 export const DELETE: APIRoute = async ({ params, locals }) => {
     
     const { user } = locals;    // Get current user from session cookie
-    const { slugToDelete } = params;    // Get the note slug from the URL params
+    const { slug } = params;    // Get the note slug from the URL params
 
     // Auth and Param checks
     if (!user) return new Response("Unauthorized", { status: 401 });
-    if (!slugToDelete) return new Response("Missing note slug.", { status: 400 });
+    if (!slug) return new Response("Missing note slug.", { status: 400 });
     try {
         let deletedNoteId: number | null = null;
         
@@ -82,7 +82,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
             // Also get userId (owner) for authorization check
             const noteToDelete = await tx.query.note_metadata.findFirst({
                 columns: { id: true, userId: true },
-                where: eq(note_metadata.slug, slugToDelete),
+                where: eq(note_metadata.slug, slug),
             });
 
             // Return 404 if the slug doesn't exist and rollback transaction
