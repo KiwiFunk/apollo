@@ -1,8 +1,16 @@
 ---
-import Dashboard from '../layouts/Dashboard.astro';
+// src/pages/notes/create.astro
+
+import Dashboard from "../layouts/Dashboard.astro";
+import NoteEditor from "../components/NoteEditor.tsx";
+
+// NOTE: The primary protection is in the middleware, but this check remains safe.
+const { user } = Astro.locals;
+if (!user) return Astro.redirect("/auth"); 
 ---
 
 <Dashboard>
-    <h1 class="text-2xl font-bold mb-4">Create a New Note</h1>
-    <slot />
+    <div class="py-8">
+        <NoteEditor client:only />
+    </div>
 </Dashboard>
