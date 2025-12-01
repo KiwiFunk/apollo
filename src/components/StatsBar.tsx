@@ -3,7 +3,7 @@ import type { SelectedNote } from "../types";
 import ToggleTab from '../components/ToggleTab.tsx';
 
 
-export default function StatsBar({ metadata, htmlContent }: { metadata: SelectedNote['metadata'], htmlContent: string }) {
+export default function StatsBar({ metadata, htmlContent, toggleState }: { metadata: SelectedNote['metadata'], htmlContent: string, toggleState?: (valueL boolean) => void }) {
 
     // State to manage the visibility of the stats section
     const [isOpen, setIsOpen] = useState(true);
@@ -91,7 +91,7 @@ export default function StatsBar({ metadata, htmlContent }: { metadata: Selected
 
                 <div class="flex flex-row gap-x-4 items-center">
                     {/* Edit Toggle */}
-                    <ToggleTab onChange={(active) => console.log("Selected:", active ? "EDIT" : "VIEW")} Labels={{ on: "EDIT", off: "VIEW" }} />
+                    <ToggleTab onChange={(isEdit) => toggleState?.(isEdit)} Labels={{ on: "EDIT", off: "VIEW" }} />
 
                     {/* Show/Hide Toggle */}
                     <div onClick={handleToggle} role="button">
