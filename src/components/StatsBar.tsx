@@ -90,7 +90,7 @@ export default function StatsBar({ metadata, htmlContent, toggleState }: { metad
                 </div>
 
                 <div class="flex flex-row gap-x-4 items-center">
-                    {/* Edit Toggle */}
+                    {/* Edit Toggle - Pass toggleState callback to send edit mode state to parent */}
                     <ToggleTab onChange={(isEdit) => toggleState?.(isEdit)} Labels={{ on: "EDIT", off: "VIEW" }} />
 
                     {/* Show/Hide Toggle */}
