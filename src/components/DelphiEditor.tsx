@@ -47,16 +47,6 @@ const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
         }
     }, [note]);
 
-    const adjustHeight = () => {
-        const el = textareaRef.current;
-        if (el) {
-            el.style.height = 'auto';
-            el.style.height = el.scrollHeight + 'px';
-        }
-    };
-
-    useEffect(() => { adjustHeight(); }, [content]);
-
     return (
         // Integrated Container Styles (Border, Background, Shadow)
         <div className="relative max-w-5xl lg:m-12 p-6 bg-gray-100 rounded-lg border border-gray-300 font-mono text-sm text-gray-800 overflow-hidden">
@@ -107,14 +97,22 @@ const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
                 </div>
 
                 {/* --- CONTENT BODY --- */}
-                <textarea 
-                    ref={textareaRef}
-                    className="w-full bg-transparent border-none p-0 mt-6 focus:ring-0 resize-none outline-none overflow-hidden leading-relaxed text-gray-800 font-mono text-sm placeholder-gray-400"
-                    value={content}
-                    onInput={(e) => setContent(e.currentTarget.value)}
-                    spellcheck={false}
-                    placeholder="Start writing your markdown here..."
-                />
+                <div className="grid mt-6 text-sm font-mono leading-relaxed">
+                    {/* Ghost Element to dictate height & prevent scroll jumps - Prevents DOM Manipulation */}
+                    <div className="invisible col-start-1 row-start-1 whitespace-pre-wrap wrap-break-words p-0 border-none" aria-hidden="true">
+                        {content + '\n'}
+                    </div>
+
+                    {/* Actual Textarea: Overlays the ghost */}
+                    <textarea 
+                        ref={textareaRef}
+                        className="col-start-1 row-start-1 w-full h-full bg-transparent border-none p-0 focus:ring-0 resize-none outline-none overflow-hidden text-gray-800 placeholder-gray-400"
+                        value={content}
+                        onInput={(e) => setContent(e.currentTarget.value)}
+                        spellcheck={false}
+                        placeholder="Start writing your markdown here..."
+                    />
+                </div>
             </div>
 
             {/* Integrated Status Bar */}
