@@ -7,6 +7,7 @@ import { useState, useMemo } from 'preact/hooks';
 import { marked } from 'marked';                    // `marked` is used to parse markdown for display
 import StatsBar from './StatsBar';                  // Provides bool for View/Edit state
 import type { FullNote } from '../types';           // note_metadata + note_content
+import Delphi from './DelphiEditor';                // Raw markdown editor component
 
 export default function NoteViewer({ note }: { note: FullNote }) {
 
@@ -35,11 +36,8 @@ export default function NoteViewer({ note }: { note: FullNote }) {
                 </article>
             ) : (
                 // Display Raw Mardown content
-                <div class="max-w-5xl mx-auto p-12">
-                    <div class="bg-gray-100 p-4 rounded border border-gray-300 font-mono whitespace-pre-wrap text-sm">
-                        <p class="mb-2 font-bold text-gray-500 uppercase text-xs">Raw Markdown Content:</p>
-                        {note.content}
-                    </div>
+                <div class="max-w-5xl mx-auto">
+                    <Delphi note={note} />
                 </div>
             )}
         </div>
