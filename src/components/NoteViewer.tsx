@@ -3,16 +3,23 @@
  * Markdown content returned by the API endpoint
  * View displays parsed content from `marked`, Edit displays raw markdown, and submits to PUT route.
  **/
-import { useState, useMemo } from 'preact/hooks';
+import { useState, useMemo, useRef } from 'preact/hooks';
 import { marked } from 'marked';                    // `marked` is used to parse markdown for display
 import StatsBar from './StatsBar';                  // Provides bool for View/Edit state
 import type { FullNote } from '../types';           // note_metadata + note_content
 import Delphi from './DelphiEditor';                // Raw markdown editor component
+import type { DelphiRef } from './DelphiEditor';    // Ref type for DelphiEditor
 
 export default function NoteViewer({ note }: { note: FullNote }) {
 
     // Editing bool state passed up from ToggleTab->StatsBar->NoteViewer
     const [isEditing, setIsEditing] = useState(false);
+
+    const handleToggle = () => {
+        // If currently editing, save, then toggle
+        if (isEditing)handleSave();
+        setIsEditing(prev => !prev);
+    }
 
     // Memoize content to prevent re-renders unless changed
     const htmlContent = useMemo(() => {
@@ -20,13 +27,31 @@ export default function NoteViewer({ note }: { note: FullNote }) {
         return note.content ? marked.parse(note.content) as string : '';
     }, [note.content]);
 
+    // Create ref to access DelphiEditor methods
+    const editorRef = useRef<DelphiRef>(null);
+
+    // Handle Save Action
+    const handleSave = () => {
+        // Only try to save if the editor is actually mounted (ref exists)
+        if (editorRef.current) {
+            try {
+                // Call the function exposed by useImperativeHandle
+                const fullNoteData = editorRef.current.getSaveData();
+                console.log("Here is the JSON object:", fullNoteData);
+                // TODO: Send FullNote Object to PUT route
+            } catch (error) {
+                console.error("Error saving note:", error);
+            }
+        }
+    };
+
     return (
         <div>
             {/* Pass parsed HTML to StatsBar for word count logic */}
             <StatsBar 
                 metadata={note.metadata} 
                 htmlContent={htmlContent} 
-                toggleState={setIsEditing} 
+                toggleState={handleToggle} 
             />
 
             {!isEditing ? (
@@ -37,7 +62,7 @@ export default function NoteViewer({ note }: { note: FullNote }) {
             ) : (
                 // Display Raw Mardown content
                 <div class="max-w-5xl mx-auto">
-                    <Delphi note={note} />
+                    <Delphi note={note} ref={editorRef} />
                 </div>
             )}
         </div>

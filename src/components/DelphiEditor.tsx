@@ -1,7 +1,17 @@
-import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
+import { useState, useEffect, useRef, useMemo, useImperativeHandle } from 'preact/hooks';
+import { forwardRef } from 'preact/compat';
 import type { FullNote, NoteMeta } from '../types';
 
-export default function Delphi({ note }: { note?: FullNote }) {
+// Define the functions parent can call
+export interface DelphiRef {
+    getSaveData: () => FullNote;
+}
+
+interface DelphiProps {
+    note?: FullNote;
+}
+  
+const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
 
     const [meta, setMeta] = useState<NoteMeta>(note?.metadata || {
         title: '', category: '', description: '', slug: '', userId: '', publishDate: new Date(), tags: []
@@ -10,9 +20,19 @@ export default function Delphi({ note }: { note?: FullNote }) {
     const [content, setContent] = useState(note?.content || '');
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    // 1. Calculate Stats
+    // Calculate Stats
     const wordCount = useMemo(() => content.trim().split(/\s+/).filter(w => w.length > 0).length, [content]);
     const charCount = content.length;
+
+    // Expose methods to parent via ref
+    useImperativeHandle(ref, () => ({
+        getSaveData: () => {
+            return {
+                metadata: meta,
+                content: content
+            };
+        }
+    }));
 
     useEffect(() => {
         if (note) {
@@ -32,7 +52,7 @@ export default function Delphi({ note }: { note?: FullNote }) {
     useEffect(() => { adjustHeight(); }, [content]);
 
     return (
-        // 2. Integrated Container Styles (Border, Background, Shadow)
+        // Integrated Container Styles (Border, Background, Shadow)
         <div className="relative max-w-5xl lg:m-12 p-6 bg-gray-100 rounded-lg border border-gray-300 font-mono text-sm text-gray-800 overflow-hidden">
 
           <p class="mb-2 font-bold text-gray-500 uppercase text-xs tracking-wider">Raw Markdown Content:</p>
@@ -91,7 +111,7 @@ export default function Delphi({ note }: { note?: FullNote }) {
                 />
             </div>
 
-            {/* 3. Integrated Status Bar */}
+            {/* Integrated Status Bar */}
             <div className="absolute bottom-0 left-0 w-full bg-gray-200 border-t border-gray-300 text-[10px] uppercase tracking-wider text-gray-500 px-4 py-1 flex justify-between items-center select-none">
                 <span className="font-bold text-purple-600">-- INSERT MODE --</span>
                 <div className="flex gap-4 tracking-wider">
@@ -101,4 +121,6 @@ export default function Delphi({ note }: { note?: FullNote }) {
             </div>
         </div>
     );
-}
+});
+
+export default Delphi;
