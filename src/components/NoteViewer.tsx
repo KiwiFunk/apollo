@@ -37,6 +37,14 @@ export default function NoteViewer({ note }: { note: FullNote }) {
             try {
                 // Call the function exposed by useImperativeHandle
                 const fullNoteData = editorRef.current.getSaveData();
+
+                // If Null was returned, no changes were made
+                if (!fullNoteData) {
+                    console.log("No changes detected. Skipping save.");
+                    return;
+                }
+
+                // Else update Nanostore and send PUT to API
                 console.log("Here is the JSON object:", fullNoteData);
                 // TODO: Send FullNote Object to PUT route
             } catch (error) {

@@ -4,7 +4,7 @@ import type { FullNote, NoteMeta } from '../types';
 
 // Define the functions parent can call
 export interface DelphiRef {
-    getSaveData: () => FullNote;
+    getSaveData: () => FullNote | null;
 }
 
 interface DelphiProps {
@@ -27,10 +27,16 @@ const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
     // Expose methods to parent via ref
     useImperativeHandle(ref, () => ({
         getSaveData: () => {
-            return {
-                metadata: meta,
-                content: content
-            };
+          // Check if there were any changes made
+          const isMetaChanged = JSON.stringify(meta) !== JSON.stringify(note?.metadata);
+          const isContentChanged = content !== (note?.content || '');
+          // If there were no changes, return null (This should still work with note creation)
+          if (!isMetaChanged && !isContentChanged) return null;
+
+          return {
+            metadata: meta,
+            content: content
+          };
         }
     }));
 
