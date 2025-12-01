@@ -43,6 +43,6 @@ export interface FullNote {
         category?: string;
         tags?: string[];
     };
-    // Markdown is parsed to HTML by the API route
-    htmlContent: string;
+    // Return raw Markdown content from related note_content table
+    content: string;
 }
