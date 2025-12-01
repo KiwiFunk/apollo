@@ -2,8 +2,14 @@ import { useState } from 'preact/hooks';
 import type { SelectedNote } from "../types";
 import ToggleTab from '../components/ToggleTab.tsx';
 
+// Define prop types
+type StatsBarProps = {
+    metadata: SelectedNote['metadata'];
+    htmlContent: string;
+    toggleState?: (value: boolean) => void;
+}
 
-export default function StatsBar({ metadata, htmlContent, toggleState }: { metadata: SelectedNote['metadata'], htmlContent: string, toggleState?: (valueL boolean) => void }) {
+export default function StatsBar({ metadata, htmlContent, toggleState }: StatsBarProps) {
 
     // State to manage the visibility of the stats section
     const [isOpen, setIsOpen] = useState(true);
