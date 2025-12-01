@@ -37,9 +37,9 @@ export const GET: APIRoute = async ({ params, locals }) => {
 
         // Data structure from Database
         const metadata = result;
-        const rawContent = metadata.content?.content || '';     // Access the joined content from nested object
+        const markdownContent = metadata.content?.content || '';     // Access the joined content from nested object
         
-        if (!rawContent) return new Response(`Note content is missing for: ${slug}`, { status: 404 });
+        if (!markdownContent) return new Response(`Note content is missing for: ${slug}`, { status: 404 });
 
         const responseData = {
             metadata: {
@@ -48,7 +48,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
                 publishDate: metadata.publishDate ? new Date(metadata.publishDate).toISOString() : null,
                 category: metadata.category,
             },
-            content,
+            content: markdownContent,
         };
 
         return new Response(JSON.stringify(responseData), {
