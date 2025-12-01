@@ -1,26 +1,36 @@
 import { useState } from 'preact/hooks';
 import clsx from 'clsx';
 
-// Accept callback to handle mode change
-export default function HardwareToggle({ onChange, Labels }: { onChange?: (mode: "ON" | "OFF") => void, Labels: { on: string, off: string } }) {
-  const [on, setOn] = useState(false);
+// Define data structure for Labels
+type HardwareToggleProps = {
+  onChange?: (value: boolean) => void;
+  Labels: { on: string; off: string };
+}
 
-  const toggle = () => {
-    const next = !on;
-    setOn(next);
-    onChange?.(next ? "ON" : "OFF");
+// Accept callback to handle mode change
+export default function HardwareToggle({ onChange, Labels }: HardwareToggleProps) {
+
+  // 'State' is a bool value that signals if the toggle is on or not
+  const [state, setState] = useState(false);
+
+  const handleToggle = () => {
+    setState(prev => {
+      onChange?.(!prev);
+      return !prev;
+    });
   };
+
 
   return (
     <div
-      onClick={toggle}
+      onClick={handleToggle}
       class="relative inset-shadow-2xs aspect-[2.5/1] h-[60%] bg-gray-100 rounded p-1 cursor-pointer select-none overflow-hidden z-10"
     >
       {/* Accent Fill */}
       <div
         class={clsx(
           "absolute inset-0 rounded transition-colors duration-300",
-          on ? "bg-indigo-600" : "bg-transparent"
+          state ? "bg-indigo-600" : "bg-transparent"
         )}
       />
 
@@ -28,7 +38,7 @@ export default function HardwareToggle({ onChange, Labels }: { onChange?: (mode:
       <div
         class={clsx(
           "absolute inset-0 flex items-center transition-all duration-300 px-0.5",
-          on ? "justify-end" : "justify-start"
+          state ? "justify-end" : "justify-start"
         )}
       >
         {/* Slider */}
@@ -36,8 +46,8 @@ export default function HardwareToggle({ onChange, Labels }: { onChange?: (mode:
       </div>
 
       {/* Label */}
-      <div class={clsx("absolute inset-0 flex items-center justify-center font-semibold tracking-wider pointer-events-none text-xs", on ? "text-white" : "text-gray-700")}>
-        {on ? Labels.on : Labels.off}
+      <div class={clsx("absolute inset-0 flex items-center justify-center font-semibold tracking-wider pointer-events-none text-xs", state ? "text-white" : "text-gray-700")}>
+        {state ? Labels.on : Labels.off}
       </div>
     </div>
   );
