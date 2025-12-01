@@ -1,5 +1,4 @@
 import type { APIRoute } from 'astro';
-import { marked } from 'marked';
 import { db } from '../../../db';                   // Import central Drizzle client
 import { eq, and } from 'drizzle-orm';              // Import the 'equals' & 'and' operator from Drizzle
 import { note_metadata, note_content } from '../../../db/schema'; 
@@ -34,20 +33,13 @@ export const GET: APIRoute = async ({ params, locals }) => {
         });
 
         // Return 404 if note doesn't exist, or doesnt belong to the authenticated user.
-        if (!result) {
-            return new Response(`Note not found: ${slug}`, { status: 404 });
-        }
+        if (!result) return new Response(`Note not found: ${slug}`, { status: 404 });
 
         // Data structure from Database
         const metadata = result;
         const rawContent = metadata.content?.content || '';     // Access the joined content from nested object
         
-        if (!rawContent) {
-             return new Response(`Note content is missing for: ${slug}`, { status: 404 });
-        }
-
-        // Convert Markdown content to HTML
-        const htmlContent = marked(rawContent); // Use marked on the content (Metadata is plain strings)
+        if (!rawContent) return new Response(`Note content is missing for: ${slug}`, { status: 404 });
 
         const responseData = {
             metadata: {
@@ -56,7 +48,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
                 publishDate: metadata.publishDate ? new Date(metadata.publishDate).toISOString() : null,
                 category: metadata.category,
             },
-            htmlContent,
+            content,
         };
 
         return new Response(JSON.stringify(responseData), {
