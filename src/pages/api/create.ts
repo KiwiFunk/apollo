@@ -7,11 +7,7 @@ import { eq } from 'drizzle-orm';       // Import Drizzle operators
 
 import { note_metadata, note_content } from '../../db/schema';
 
-
-import matter from 'gray-matter';       // Import to parse YAML frontmatter
 import slugify from 'slugify';          // Create clean URL slugs
-
-
 
 // Takes in request content, and locals for user context
 export const POST: APIRoute = async ({ request, locals }) => {
@@ -23,16 +19,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     try {
-        // Store the raw response
-        const rawBody = await request.text();
-
-        // Parse with gray-matter to split frontmatter
-        const { data: frontmatter, content: markdownBody } = matter(rawBody);
+        // Parse and deconstrut JSON payload
+        const payload = await request.json();
+        const { metadata, content } = payload;
 
         // Perform validation on data
-        const title = frontmatter.title?.toString().trim();
-        const category = frontmatter.category?.toString().trim() || 'Uncategorized';
-        const description = frontmatter.description?.toString().trim() || generateDesc(markdownBody);
+        const title = metadata.title?.toString().trim();
+        const category = metadata.category?.toString().trim() || 'Uncategorized';
+        const description = metadata.description?.toString().trim() || generateDesc(content);
 
         if (!title || title.length < 1) {
             return new Response("Validation Failed: Title is required.", { status: 400 });
@@ -67,7 +61,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             await tx.insert(note_content)
                 .values({
                     noteId: noteId,
-                    content: markdownBody,
+                    content: content,
                 });
             
             // Prepare data for AJAX response (Match NoteMeta defined in types.ts)
