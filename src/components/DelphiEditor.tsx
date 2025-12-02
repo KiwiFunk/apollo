@@ -117,7 +117,10 @@ const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
 
             {/* Integrated Status Bar */}
             <div className="absolute bottom-0 left-0 w-full bg-gray-200 border-t border-gray-300 text-[10px] uppercase tracking-wider text-gray-500 px-4 py-1 flex justify-between items-center select-none">
-                <span className="font-bold text-purple-600">-- INSERT MODE --</span>
+                <div className="flex gap-4">
+                  <span className="font-semibold text-purple-600">-- INSERT MODE --</span>
+                  <span className="tracking-wider">DELPHI EDITOR V0.1</span>
+                </div>
                 <div className="flex gap-4 tracking-wider">
                     <span>{wordCount} words</span>
                     <span>{charCount} chars</span>
