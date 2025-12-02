@@ -37,14 +37,8 @@ export interface SearchItem {
 }
 
 export interface FullNote {
-    metadata: {
-        slug: string;
-        title: string;
-        description: string | null;
-        publishDate: Date;
-        category?: string;
-        tags?: string[];
-    };
+    // Use NoteMeta to ensure it always matches the DB definition
+    metadata: NoteMeta
     // Return raw Markdown content from related note_content table
     content: string;
 }

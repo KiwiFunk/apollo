@@ -8,7 +8,7 @@ import { generateUniqueSlug } from '../../../utils/markdownUtils';  // Import un
 
 import slugify from 'slugify';                      // Create clean URL slugs
 
-// GET single note by slug for the logged in user
+// GET single note by slug for the logged in user (Deprecated - Handled in Astro SSR Block)
 export const GET: APIRoute = async ({ params, locals }) => {
 
     const { slug } = params;    // Get the current slug
