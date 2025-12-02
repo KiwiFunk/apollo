@@ -6,21 +6,17 @@ import NoteViewer from "../../components/NoteViewer.tsx";
 // Get the slug from the URL params
 const { slug } = Astro.params;
 
-// Endpoint already checks if user owns the note
+// Security: If no slug, go back immediately
+if (!slug) return Astro.redirect("/");
 
 // Fetch full note data for the given slug (metadata + content)
 // Returns a FullNote object (metadata + content)
 const getNote = async (noteSlug: string): Promise<FullNote> => {
 
-    // Pass cookies for authentication (e.g., session token)
-    const cookies = Astro.request.headers.get('cookie');
-
-    // Construct the URL for fetching the note
-    const fetchUrl = `${Astro.url.origin}/api/notes/${noteSlug}`;
-    
-    const response = await fetch(fetchUrl, {
+    // Fetch the requested note from the Database
+    const response = await fetch(new URL(`/api/notes/${slug}`, Astro.url), {
         headers: {
-            'cookie': cookies || ''
+            cookie: Astro.request.headers.get("cookie") || ""
         }
     });
 
