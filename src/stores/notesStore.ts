@@ -145,9 +145,10 @@ export const removeNote = (slugToRemove: string) => {
 export const updateNote = (updatedNote: NoteMeta) => {
     const currentState = $notesStore.get();
     
-    // Update 'list': Replace the old note with the new one by ID/Slug
+    // Update 'list': Merge the old note with the new one by ID/Slug
+    // (Prevents any missing fields)
     const newList = currentState.list.map(note => 
-        note.id === updatedNote.id ? updatedNote : note
+        note.id === updatedNote.id ? { ...note, ...updatedNote } : note
     );
 
     // Sort the list by publishDate again (since update changes the date)
