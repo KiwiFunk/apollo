@@ -1,55 +1,55 @@
 ---
 import Dashboard from "../../layouts/Dashboard.astro";
-import type { FullNote } from "../../types";
 import NoteViewer from "../../components/NoteViewer.tsx";
+import type { FullNote } from "../../types";
 
-// Get the slug from the URL params
+// DB Access Imports
+import { db } from "../../db";
+import { eq, and } from "drizzle-orm";
+import { note_metadata } from "../../db/schema";
+
+// Get the slug from the URL params & Current User
 const { slug } = Astro.params;
+const { user } = Astro.locals;
 
-// Security: If no slug, go back immediately
+// Security Checks
 if (!slug) return Astro.redirect("/");
+if (!user) return Astro.redirect("/auth");
 
-// Fetch full note data for the given slug (metadata + content)
-// Returns a FullNote object (metadata + content)
-const getNote = async (noteSlug: string): Promise<FullNote> => {
-
-    // Fetch the requested note from the Database
-    const response = await fetch(new URL(`/api/notes/${slug}`, Astro.url), {
-        headers: {
-            cookie: Astro.request.headers.get("cookie") || ""
-        }
-    });
-
-    if (response.status === 404) {
-        // Handle 404 specifically for a note not found
-        // TODO: Create a generic 404 Page
-        throw new Error(`Note not found: ${noteSlug}`); 
+// Use the Drizzle relationship helper to join metadata and content 
+const noteResult = await db.query.note_metadata.findFirst({
+    where: and(
+        eq(note_metadata.slug, slug),       // Match the slug
+        eq(note_metadata.userId, user.id)   // Ensures the note belongs to the user
+    ),
+    // Use relational helper to JOIN note_content table
+    with: {
+        content: true
     }
-    // Else handle other errors
-    if (!response.ok) {
-        throw new Error(`Failed to fetch note ${noteSlug}. Status: ${response.status}`);
-    }
+});
 
-    return response.json();
-};
-
-// Fetch the full note data
-let noteData: FullNote | null = null;
-if (slug) {
-    try {
-        noteData = await getNote(slug);
-    } catch (error) {
-        console.error("Fatal error fetching note:", error);
-        return new Response('Note could not be loaded.', { status: 500 });
-    }
-}
-// If slug is missing, redirect or handle
-if (!slug || !noteData) {
+if (!noteResult) {
+    console.error(`Note not found: ${slug}`);
     return Astro.redirect("/dashboard");
 }
+
+// Construct the FullNote object expected by NoteViewer
+const fullNote: FullNote = {
+    metadata: {
+        id: noteResult.id,
+        userId: noteResult.userId,
+        slug: noteResult.slug,
+        title: noteResult.title,
+        description: noteResult.description,
+        publishDate: noteResult.publishDate,
+        category: noteResult.category,
+        tags: [] 
+    },
+    content: noteResult.content?.content || ''
+};
 
 ---
 
 <Dashboard>
-    <NoteViewer note={noteData} client:load />
+    <NoteViewer note={fullNote} client:load />
 </Dashboard>
