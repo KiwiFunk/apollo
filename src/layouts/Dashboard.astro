@@ -7,24 +7,31 @@ import type { NoteMeta } from "../types";
 import Sidebar from "../components/Sidebar.tsx";
 import Navbar from "../components/Navbar.astro";
 
-// Function to fetch notes for the authenticated user
-const getNotes = async () => {
-    // Pass cookies for authentication (e.g., session token)
-    const cookies = Astro.request.headers.get('cookie');
+// DB Imports
+import { db } from "../db";
+import { note_metadata } from "../db/schema";
+import { eq, desc } from "drizzle-orm";
 
-    const response = await fetch(`${Astro.url.origin}/api/notes`, {
-        headers: {
-            'cookie': cookies || ''
-        }
-    });
-    if (!response.ok) {
-        throw new Error("Failed to fetch notes");
-    }
-    return response.json();
-};
+// Get user from locals (Middleware already handled auth!)
+const { user } = Astro.locals;
 
-// Fetch user notes
-const userNotes: NoteMeta[] = await getNotes();
+// Redirect if no user (Safety check)
+if (!user) {
+    return Astro.redirect('/auth');
+}
+
+// Direct DB Query (SSR Build)
+let userNotes: NoteMeta[] = [];
+
+try {
+    userNotes = await db.select()
+        .from(note_metadata)
+        .where(eq(note_metadata.userId, user.id))
+        .orderBy(desc(note_metadata.publishDate));
+} catch (error) {
+    console.error("Failed to fetch notes from DB:", error);
+    // userNotes remains [] if error occurs, preventing crash
+}
 ---
 
 <SiteLayout title="Apollo - Home">
