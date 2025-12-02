@@ -2,7 +2,7 @@
 // src/pages/notes/create.astro
 
 import Dashboard from "../layouts/Dashboard.astro";
-import NoteEditor from "../components/NoteEditor.tsx";
+import CreateNote from "../components/CreateNote.tsx";
 
 // NOTE: The primary protection is in the middleware, but this check remains safe.
 const { user } = Astro.locals;
@@ -11,6 +11,6 @@ if (!user) return Astro.redirect("/auth");
 
 <Dashboard>
     <div class="py-8">
-        <NoteEditor client:only />
+        <CreateNote client:only />
     </div>
 </Dashboard>
