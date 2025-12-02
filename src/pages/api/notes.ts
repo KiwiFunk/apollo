@@ -4,6 +4,7 @@ import { note_metadata } from '../../db/schema';    // Import the main note_meta
 import { eq, and, desc } from 'drizzle-orm';        // Import Drizzle operators for comparison and sorting
 
 // GET all notes for a logged in user (This fetches only the metadata, not the linked note_content table)
+// This Endpoint is no longer used - Dashboard.astro directly queries the DB during server build. 
 export const GET: APIRoute = async ({ locals }) => {
 
     const { user } = locals;                        // Get current authenticated user from middleware
