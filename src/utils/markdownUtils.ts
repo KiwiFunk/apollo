@@ -1,3 +1,6 @@
+import { eq } from 'drizzle-orm';
+import { note_metadata } from '../db/schema';
+
 /**
  * Generates a short description from the raw markdown content.
  * It extracts the first sentence of the first non-heading paragraph
