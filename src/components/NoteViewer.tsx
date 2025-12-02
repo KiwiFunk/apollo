@@ -12,6 +12,9 @@ import type { DelphiRef } from './DelphiEditor';    // Ref type for DelphiEditor
 
 export default function NoteViewer({ note }: { note: FullNote }) {
 
+    // Store Note data in a local state so we can update island with AJAX response after content edit
+    const [currentNote, setCurrentNote] = useState<FullNote>(note);
+
     // Editing bool state passed up from ToggleTab->StatsBar->NoteViewer
     const [isEditing, setIsEditing] = useState(false);
 
@@ -24,8 +27,8 @@ export default function NoteViewer({ note }: { note: FullNote }) {
     // Memoize content to prevent re-renders unless changed
     const htmlContent = useMemo(() => {
         // Ensure content exists to prevent crashes
-        return note.content ? marked.parse(note.content) as string : '';
-    }, [note.content]);
+        return currentNote.content ? marked.parse(currentNote.content) as string : '';
+    }, [currentNote.content]);
 
     // Create ref to access DelphiEditor methods
     const editorRef = useRef<DelphiRef>(null);
@@ -57,7 +60,7 @@ export default function NoteViewer({ note }: { note: FullNote }) {
         <div>
             {/* Pass parsed HTML to StatsBar for word count logic */}
             <StatsBar 
-                metadata={note.metadata} 
+                metadata={currentNote.metadata} 
                 htmlContent={htmlContent} 
                 toggleState={handleToggle} 
             />
@@ -70,7 +73,7 @@ export default function NoteViewer({ note }: { note: FullNote }) {
             ) : (
                 // Display Raw Mardown content
                 <div class="max-w-5xl mx-auto">
-                    <Delphi note={note} ref={editorRef} />
+                    <Delphi note={currentNote} ref={editorRef} />
                 </div>
             )}
         </div>
