@@ -38,7 +38,9 @@ export interface SearchItem {
 
 export interface FullNote {
     metadata: {
+        slug: string;
         title: string;
+        description: string | null;
         publishDate: Date;
         category?: string;
         tags?: string[];

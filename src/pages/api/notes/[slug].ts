@@ -42,6 +42,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
 
         const responseData = {
             metadata: {
+                slug: metadata.slug,
                 title: metadata.title,
                 description: metadata.description,
                 publishDate: metadata.publishDate ? new Date(metadata.publishDate).toISOString() : null,
