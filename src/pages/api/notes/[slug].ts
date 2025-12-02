@@ -6,7 +6,6 @@ import { note_metadata, note_content } from '../../../db/schema';
 import { generateDesc } from '../../../utils/markdownUtils';        // Import description generator
 import { generateUniqueSlug } from '../../../utils/markdownUtils';  // Import unique slug generator
 
-import matter from 'gray-matter';                   // Import to parse YAML frontmatter
 import slugify from 'slugify';                      // Create clean URL slugs
 
 // GET single note by slug for the logged in user
@@ -117,7 +116,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
 };
 
 /** Update single note by slug for the logged in user (PUT)
- * @param request - The incoming request object containing the updated note data in markdown format
+ * @param request - Incoming request object containing note data as a JSON payload: { metadata: NoteMeta, content: string }
  * @param locals - The locals object containing the authenticated user info
  * @param params - The route parameters containing the note slug to update
  */
@@ -131,13 +130,15 @@ export const PUT: APIRoute = async ({ request, locals, params }) => {
     if (!slug) return new Response("Missing note slug.", { status: 400 });
     
     try {
-        const rawBody = await request.text();
-        const { data: frontmatter, content: markdownBody } = matter(rawBody);
+        // Parse incoming JSON payload
+        const payload = await request.json();
+        // Deconstruct JSON to get metadata and Markdown content
+        const { metadata, content } = payload;
 
         // Validate and prepare data
-        const title = frontmatter.title?.toString().trim();
-        const category = frontmatter.category?.toString().trim() || 'Uncategorized';
-        const description = frontmatter.description?.toString().trim() || generateDesc(markdownBody);
+        const title = metadata.title?.toString().trim();
+        const category = metadata.category?.toString().trim() || 'Uncategorized';
+        const description = metadata.description?.toString().trim() || generateDesc(content);
 
         if (!title || title.length < 1) {
             return new Response("Validation Failed: Title is required.", { status: 400 });
