@@ -194,7 +194,7 @@ export const PUT: APIRoute = async ({ request, locals, params }) => {
             // Update note_content
             await tx.update(note_content)
                 .set({
-                    content: markdownBody,
+                    content: content,
                 })
                 .where(eq(note_content.noteId, noteId));
             
