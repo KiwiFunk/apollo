@@ -199,6 +199,7 @@ export const PUT: APIRoute = async ({ request, locals, params }) => {
                 .where(eq(note_content.noteId, noteId));
             
             // Prepare data for AJAX response (Match NoteMeta defined in types.ts)
+            // We only return Metadata to save bandwidth
             const meta = updatedMetadata[0];
             updatedNoteMeta = { 
                 id: meta.id,
