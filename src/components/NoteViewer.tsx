@@ -54,7 +54,8 @@ export default function NoteViewer({ note }: { note: FullNote }) {
                 const response = await fetch(`/api/notes/${currentNote.metadata.slug}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(fullNoteData)
+                    body: JSON.stringify(fullNoteData),
+                    credentials: 'include', // Send cookies for auth
                 });
 
                  // Check for server errors before parsing JSON
