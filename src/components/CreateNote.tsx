@@ -55,7 +55,7 @@ export default function CreateNote() {
                 <button 
                     onClick={handlePublish}
                     disabled={isSaving}
-                    className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold shadow-sm transition-colors disabled:opacity-50"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-semibold shadow-sm transition-colors disabled:opacity-50"
                 >
                     {isSaving ? 'Publishing...' : 'Publish Note'}
                 </button>
