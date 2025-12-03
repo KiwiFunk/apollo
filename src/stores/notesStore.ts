@@ -33,7 +33,7 @@ const getCategorizedMap = (data: NoteMeta[]): NotesByCategoryMap => {
     );
 };
 
-// NANOSTORE ATOM
+// NANOSTORE ATOM INIT
 
 // Store to hold all user note metadata, optimized for different consumption methods.
 export const $notesStore = atom<NoteStoreState>({
@@ -41,6 +41,13 @@ export const $notesStore = atom<NoteStoreState>({
     normalizedList: [],     // Array optimized for Fuse.js
     categorized: {}         // Mapped by category (Used for NavTree etc)
 });
+
+// State for handling the Note Creation Modal
+export const $isCreateModalOpen = atom(false);
+
+export const setCreateModalOpen = (isOpen: boolean) => {
+    $isCreateModalOpen.set(isOpen);
+};
 
 // MUTATOR FUNCTIONS
 
