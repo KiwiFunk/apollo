@@ -6,6 +6,7 @@ import type { NoteMeta } from "../types";
 // Import Components
 import Sidebar from "../components/Sidebar.tsx";
 import Navbar from "../components/Navbar.astro";
+import CreateNoteModal from "../components/CreateNoteModal.tsx";
 
 // DB Imports
 import { db } from "../db";
@@ -38,6 +39,9 @@ try {
 
     <!-- Initialize the notes store with user notes -->
     <NoteStoreInitializer initialData={userNotes} client:only="preact" />
+
+    <!-- Mount the Modal (Hidden by default via CSS/State) -->
+    <CreateNoteModal client:load />
 
     <div class="flex flex-col h-screen">
         <!-- Navbar -->
