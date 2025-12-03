@@ -69,7 +69,7 @@ export default function CreateNoteModal() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
             
             {/* Modal Content */}
-            <div className="bg-white w-full max-w-6xl h-[90vh] rounded-xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="bg-white w-full max-w-5xl max-h-[90vh] rounded-xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
                 
                 {/* Header */}
                 <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-gray-50">
@@ -92,8 +92,8 @@ export default function CreateNoteModal() {
                 </div>
 
                 {/* Scrollable Editor Area */}
-                <div className="flex-1 overflow-y-auto bg-gray-100 p-6">
-                    <div className="max-w-4xl mx-auto">
+                <div className="flex-1 overflow-y-scroll bg-gray-100">
+                    <div className="mx-auto">
                         <Delphi ref={editorRef} />
                     </div>
                 </div>
