@@ -1,12 +1,28 @@
 import { useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 
 export default function BurgerButton() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => {
-    setIsOpen(!isOpen);
     window.dispatchEvent(new CustomEvent('toggle-sidebar'));
   };
+
+  useEffect(() => {
+    // Listen for the toggle event (triggered by this button)
+    const handleToggle = () => setIsOpen(prev => !prev);
+    
+    // Listen for a specific 'close-sidebar' event (triggered by the Sidebar)
+    const handleClose = () => setIsOpen(false);
+
+    window.addEventListener('toggle-sidebar', handleToggle);
+    window.addEventListener('close-sidebar', handleClose);
+
+    return () => {
+      window.removeEventListener('toggle-sidebar', handleToggle);
+      window.removeEventListener('close-sidebar', handleClose);
+    };
+  }, []);
 
   // Wrapper: Centers the SVG in the button
   const wrapperBase = "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center transition-all duration-300 ease-in-out";
