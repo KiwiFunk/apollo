@@ -55,7 +55,7 @@ export default function LoginForm() {
   return (
     <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-8">
 
-      <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">
+      <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center select-none">
         {mode === "login" ? "Sign in to your account" : "Create a new account"}
       </h2>
 
@@ -87,7 +87,7 @@ export default function LoginForm() {
           </div>
         )}
 
-        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 mt-2">
+        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 mt-2 cursor-pointer">
           {mode === "login" ? "Sign In" : "Create Account"}
         </button>
       </form>
@@ -95,7 +95,7 @@ export default function LoginForm() {
       <div class="text-center mt-6">
         <button
           onClick={() => setMode(mode === "login" ? "register" : "login")}
-          class="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+          class="text-sm font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
         >
           {mode === "login" ? "Need an account? Sign up" : "Already have an account? Sign In"}
         </button>
