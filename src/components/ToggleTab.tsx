@@ -25,7 +25,7 @@ export default function HardwareToggle({ onChange, Labels }: HardwareToggleProps
       onClick={handleToggle}
       className={clsx(
         // Toggle Dimensions (Fixed Size)
-        "relative inline-flex h-8 w-20 shrink-0 cursor-pointer rounded border-2 border-transparent transition-colors duration-200 ease-in-out",
+        "relative inline-flex h-7 w-19 shrink-0 cursor-pointer rounded border-2 border-transparent transition-colors duration-200 ease-in-out",
         // Focus rings for keyboard accessibility (Tab key)
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2",
         // Dynamic Background Color
@@ -40,7 +40,7 @@ export default function HardwareToggle({ onChange, Labels }: HardwareToggleProps
       <span
         aria-hidden="true"
         className={clsx(
-          "pointer-events-none inline-block h-7 w-4 transform rounded bg-white shadow ring-0 transition duration-200 ease-in-out z-1000",
+          "pointer-events-none inline-block h-6 w-3 transform rounded bg-white shadow ring-0 transition duration-200 ease-in-out z-1000",
           isOn ? "translate-x-15" : "translate-x-0"
         )}
       />
