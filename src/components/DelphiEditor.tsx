@@ -49,7 +49,7 @@ const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
 
     return (
         // Integrated Container Styles (Border, Background, Shadow)
-        <div className="relative max-w-5xl lg:m-12 p-6 bg-gray-100 rounded-lg border border-gray-300 font-mono text-sm text-gray-800 overflow-hidden">
+        <div className="relative max-w-5xl lg:m-12 p-6 bg-gray-100 rounded-lg border border-gray-300 font-mono text-base text-gray-800 overflow-hidden">
 
           <p class="mb-2 font-bold text-gray-500 uppercase text-xs tracking-wider">Raw Markdown Content:</p>
             
@@ -64,7 +64,7 @@ const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
                         <span className="text-purple-700 font-bold select-none mr-2">Title:</span>
                         <input 
                             type="text" 
-                            className="flex-1 bg-transparent border-none p-0 focus:ring-0 text-gray-900 font-mono text-sm h-full placeholder-gray-400 outline-none"
+                            className="flex-1 bg-transparent border-none p-0 focus:ring-0 text-gray-900 font-mono text-base h-full placeholder-gray-400 outline-none"
                             value={meta.title}
                             onInput={(e) => setMeta({...meta, title: e.currentTarget.value})}
                             placeholder="Untitled Note"
@@ -75,7 +75,7 @@ const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
                         <span className="text-purple-700 font-bold select-none mr-2">Category:</span>
                         <input 
                             type="text" 
-                            className="flex-1 bg-transparent border-none p-0 focus:ring-0 text-gray-900 font-mono text-sm h-full placeholder-gray-400 outline-none"
+                            className="flex-1 bg-transparent border-none p-0 focus:ring-0 text-gray-900 font-mono text-base h-full placeholder-gray-400 outline-none"
                             value={meta.category || ''}
                             onInput={(e) => setMeta({...meta, category: e.currentTarget.value})}
                             placeholder="Uncategorized"
@@ -86,7 +86,7 @@ const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
                         <span className="text-purple-700 font-bold select-none mr-2">Description:</span>
                         <input 
                             type="text" 
-                            className="flex-1 bg-transparent border-none p-0 focus:ring-0 text-gray-900 font-mono text-sm h-full placeholder-gray-400 outline-none"
+                            className="flex-1 bg-transparent border-none p-0 focus:ring-0 text-gray-900 font-mono text-base h-full placeholder-gray-400 outline-none"
                             value={meta.description || ''}
                             onInput={(e) => setMeta({...meta, description: e.currentTarget.value})}
                             placeholder="Short description..."
@@ -97,7 +97,7 @@ const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
                 </div>
 
                 {/* --- CONTENT BODY --- */}
-                <div className="grid mt-6 text-sm font-mono leading-relaxed">
+                <div className="grid mt-6 text-base font-mono leading-relaxed">
                     {/* Ghost Element to dictate height & prevent scroll jumps - Prevents DOM Manipulation */}
                     <div className="invisible col-start-1 row-start-1 whitespace-pre-wrap wrap-break-words p-0 border-none" aria-hidden="true">
                         {content + '\n'}
