@@ -101,7 +101,7 @@ const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
                             {/* Actual Textarea */}
                             <textarea 
                                 rows={1}
-                                className="col-start-1 row-start-1 w-full h-full bg-transparent border-none p-0 focus:ring-0 resize-none outline-none overflow-hidden text-gray-900 font-mono text-base placeholder-gray-400 break-words whitespace-pre-wrap indent-[13ch]"
+                                className="col-start-1 row-start-1 w-full h-full bg-transparent border-none p-0 focus:ring-0 resize-none outline-none overflow-hidden text-gray-900 font-mono text-base placeholder-gray-400 wrap-break-word whitespace-pre-wrap indent-[13ch]"
                                 value={meta.description || ''}
                                 onInput={(e) => setMeta({...meta, description: e.currentTarget.value})}
                                 placeholder="Short description..."
