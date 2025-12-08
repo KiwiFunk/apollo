@@ -128,7 +128,7 @@ export default function Search() {
           {results.length > 0 ? (
             <ul>
               {results.map(({ item }) => (
-                <li key={item.slug}>
+                <li key={item.slug} onClick={() => setQuery('')}>
                   <a href={`/notes/${item.slug}`} class="block p-4 hover:bg-indigo-50 transition-colors">
                     <div class="flex justify-between items-center">
                       <span class="font-semibold text-gray-800">{item.title}</span>
