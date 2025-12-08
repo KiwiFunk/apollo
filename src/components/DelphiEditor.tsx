@@ -47,6 +47,9 @@ const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
         }
     }, [note]);
 
+    // These classes scale the text down without triggering browsers such as iOS doing an automatic zoom
+    const scaleText = "scale-[0.85] w-[117.65%] lg:w-full lg:scale-100 origin-top-left"
+
     return (
         // Integrated Container Styles (Border, Background, Shadow)
         <div className="relative max-w-5xl lg:m-12 p-6 bg-gray-100 rounded-lg border border-gray-300 font-mono text-base text-gray-800 overflow-hidden">
@@ -54,50 +57,63 @@ const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
           <p class="mb-2 font-bold text-gray-500 uppercase text-xs tracking-wider">Raw Markdown Content:</p>
             
             {/* Main Content Area */}
-            <div className="p-6 lg:p-10 pb-12"> 
+            <div className="p-1 lg:p-10 pb-12"> 
                 
                 {/* --- FRONTMATTER SECTION --- */}
+                {/* Set Indent to match label length */}
                 <div className="space-y-0 leading-relaxed"> 
                     <div className="text-gray-400 select-none font-bold">---</div>
                     
-                    <div className="flex items-center h-6 group">
-                        <span className="text-purple-700 font-bold select-none mr-2">Title:</span>
+                    {/* TITLE */}
+                    <div className={`relative h-6 group ${scaleText}`}>
+                        <span className="absolute text-purple-700 font-bold tracking-wide select-none pointer-events-none">Title:</span>
                         <input 
                             type="text" 
-                            className="flex-1 bg-transparent border-none p-0 focus:ring-0 text-gray-900 font-mono text-base h-full placeholder-gray-400 outline-none"
+                            className="w-full h-full bg-transparent border-none p-0 focus:ring-0 text-gray-900 font-mono text-base placeholder-gray-400 outline-none indent-[7ch]"
                             value={meta.title}
                             onInput={(e) => setMeta({...meta, title: e.currentTarget.value})}
                             placeholder="Untitled Note"
                         />
                     </div>
 
-                    <div className="flex items-center h-6 group">
-                        <span className="text-purple-700 font-bold select-none mr-2">Category:</span>
+                    {/* CATEGORY */}
+                    <div className={`relative h-6 group ${scaleText}`}>
+                        <span className="absolute text-purple-700 font-bold tracking-wide select-none pointer-events-none">Category:</span>
                         <input 
                             type="text" 
-                            className="flex-1 bg-transparent border-none p-0 focus:ring-0 text-gray-900 font-mono text-base h-full placeholder-gray-400 outline-none"
+                            className="w-full h-full bg-transparent border-none p-0 focus:ring-0 text-gray-900 font-mono text-base placeholder-gray-400 outline-none indent-[10ch]"
                             value={meta.category || ''}
                             onInput={(e) => setMeta({...meta, category: e.currentTarget.value})}
                             placeholder="Uncategorized"
                         />
                     </div>
 
-                    <div className="flex items-center h-6 group">
-                        <span className="text-purple-700 font-bold select-none mr-2">Description:</span>
-                        <input 
-                            type="text" 
-                            className="flex-1 bg-transparent border-none p-0 focus:ring-0 text-gray-900 font-mono text-base h-full placeholder-gray-400 outline-none"
-                            value={meta.description || ''}
-                            onInput={(e) => setMeta({...meta, description: e.currentTarget.value})}
-                            placeholder="Short description..."
-                        />
+                    {/* DESCRIPTION */}
+                    <div className={`relative min-h-[1.5rem] group ${scaleText}`}>
+                        <span className="absolute text-purple-700 font-bold tracking-wide select-none pointer-events-none">Description:</span>
+                        
+                        <div className="grid grid-cols-1 w-full">
+                            {/* Ghost Element */}
+                            <div className="invisible col-start-1 row-start-1 whitespace-pre-wrap wrap-break-word p-0 border-none indent-[13ch]" aria-hidden="true">
+                                {(meta.description || '') + ' '}
+                            </div>
+
+                            {/* Actual Textarea */}
+                            <textarea 
+                                rows={1}
+                                className="col-start-1 row-start-1 w-full h-full bg-transparent border-none p-0 focus:ring-0 resize-none outline-none overflow-hidden text-gray-900 font-mono text-base placeholder-gray-400 break-words whitespace-pre-wrap indent-[13ch]"
+                                value={meta.description || ''}
+                                onInput={(e) => setMeta({...meta, description: e.currentTarget.value})}
+                                placeholder="Short description..."
+                            />
+                        </div>
                     </div>
 
                     <div className="text-gray-400 select-none font-bold">---</div>
                 </div>
 
                 {/* --- CONTENT BODY --- */}
-                <div className="grid w-full grid-cols-1 mt-6 text-base font-mono leading-relaxed">
+                <div className={`grid grid-cols-1 mt-6 text-base ${scaleText} font-mono leading-relaxed`}>
                     {/* Ghost Element to dictate height & prevent scroll jumps - Prevents DOM Manipulation */}
                     <div className="invisible col-start-1 row-start-1 wrap-break-word whitespace-pre-wrap p-0 border-none" aria-hidden="true">
                         {content + '\n'}
