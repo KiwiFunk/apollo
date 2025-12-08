@@ -42,7 +42,7 @@ export default function Sidebar() {
         onClick={handleContentClick}
         className={[
           "select-none w-72 bg-gray-50 border-r border-gray-200 p-6",
-          "h-full transition-transform transform",
+          "h-lvh transition-transform transform",
           "fixed lg:static z-20",
           "flex flex-col",          // Use flex to manage inner scrolling
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
