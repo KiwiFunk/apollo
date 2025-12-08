@@ -1,7 +1,8 @@
 import { useRef, useState, useEffect } from 'preact/hooks';
 import { useStore } from '@nanostores/preact';
 import Delphi, { type DelphiRef } from './DelphiEditor';
-import { addNote, $isCreateModalOpen, setCreateModalOpen } from '../stores/notesStore';
+import { addNote } from '../stores/notesStore';
+import { $isCreateModalOpen, setCreateModalOpen } from '../stores/uiStore';
 
 export default function CreateNoteModal() {
     const isOpen = useStore($isCreateModalOpen);

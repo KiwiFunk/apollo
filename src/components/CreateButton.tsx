@@ -1,4 +1,4 @@
-import { setCreateModalOpen } from '../stores/notesStore';
+import { setCreateModalOpen } from '../stores/uiStore';
 import Button from './Button';
 
 export default function CreateButton() {
