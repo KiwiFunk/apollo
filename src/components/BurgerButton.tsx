@@ -14,7 +14,7 @@ export default function BurgerButton() {
   return (
     <button 
       onClick={toggleSidebar} 
-      className="lg:hidden relative w-10 h-10 focus:outline-none z-50"
+      className="lg:hidden relative w-10 h-10 focus:outline-none z-40 cursor-pointer"
       aria-label="Toggle Menu"
       aria-expanded={isOpen}
     >
