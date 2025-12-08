@@ -75,19 +75,42 @@ export default function CreateNoteModal() {
                 {/* Header */}
                 <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-gray-50">
                     <h2 className="text-xl font-bold text-gray-800">Create New Note</h2>
-                    <div className="flex gap-3">
+                    <div className="flex gap-1 lg:gap-3">
                         <button 
                             onClick={() => setCreateModalOpen(false)}
-                            className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium transition-colors"
+                            className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium transition-colors cursor-pointer"
                         >
-                            Cancel
+                            <span className="flex items-center justify-center">
+                                {/* Mobile */}
+                                <span className="lg:hidden">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                    </svg>
+                                </span>
+                                                
+                                {/* Desktop */}
+                                <span className="hidden lg:inline">Cancel</span>
+                            </span>
+                            
                         </button>
                         <button 
                             onClick={handlePublish}
                             disabled={isSaving}
-                            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-semibold shadow-sm transition-colors disabled:opacity-50"
+                            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-semibold shadow-sm transition-colors disabled:opacity-50 cursor-pointer"
                         >
-                            {isSaving ? 'Publishing...' : 'Publish Note'}
+                            <span className="flex items-center justify-center">
+                                {/* Mobile */}
+                                <span className="lg:hidden">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                        <polyline points="7 3 7 8 15 8 15 3"></polyline>
+                                    </svg>
+                                </span>
+                                                
+                                {/* Desktop */}
+                                <span className="hidden lg:inline">{isSaving ? 'Publishing...' : 'Publish Note'}</span>
+                            </span>
                         </button>
                     </div>
                 </div>
