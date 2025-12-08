@@ -42,17 +42,9 @@ export default function Sidebar() {
         onClick={handleContentClick}
         className={[
           "select-none w-72 bg-gray-50 border-r border-gray-200 p-6",
-          "transition-transform transform",
-          
-          // Pin to edges on mobile to handle browsers such as iOS. (top should be set to Navbar height)
-          "fixed left-0 top-16 bottom-0", 
-          
-          // Desktop: Reset to static flow and use full height of container
-          "lg:static lg:h-full", 
-          
-          "z-20",
-          "flex flex-col",  // Use flex to manage inner scrolling
-                
+          "h-full transition-transform transform",
+          "fixed lg:static z-20",
+          "flex flex-col",          // Use flex to manage inner scrolling
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         ].join(' ')}
       >
