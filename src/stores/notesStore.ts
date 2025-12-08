@@ -42,13 +42,6 @@ export const $notesStore = atom<NoteStoreState>({
     categorized: {}         // Mapped by category (Used for NavTree etc)
 });
 
-// State for handling the Note Creation Modal
-export const $isCreateModalOpen = atom(false);
-
-export const setCreateModalOpen = (isOpen: boolean) => {
-    $isCreateModalOpen.set(isOpen);
-};
-
 // MUTATOR FUNCTIONS
 
 /**
