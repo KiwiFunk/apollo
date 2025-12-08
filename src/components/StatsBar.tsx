@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import type { SelectedNote } from "../types";
 import ToggleTab from '../components/ToggleTab.tsx';
 
@@ -39,6 +39,39 @@ export default function StatsBar({ metadata, htmlContent, toggleState }: StatsBa
     const handleToggle = () => {
         setIsOpen(!isOpen);
     }
+
+    // Auto-collapse on scroll
+    useEffect(() => {
+
+        // Match with Tailwind breakpoint sizes. (We use lg in this project.)
+        const isMobile = window.matchMedia("(max-width: 1023px)").matches; 
+        if (!isMobile) return; 
+
+        const handleScroll = (e: Event) => {
+            const target = e.target as HTMLElement;
+            
+            // Check if scoll target is the main content area.
+            // (The <main> tag in Dashboard.astro handles the scrolling)
+            if (target.tagName === 'MAIN' || target === document.documentElement) {
+                const scrollTop = target.scrollTop;
+
+                // If scrolled down more than 50px, collapse
+                if (scrollTop > 50) {
+                    setIsOpen(false);
+                } 
+                // If back at the very top, expand
+                else if (scrollTop < 10) {
+                    setIsOpen(true);
+                }
+            }
+        };
+
+        // Use { capture: true } to detect scroll events on elements (divs/main) 
+        // 'scroll' events on elements do not bubble to the window.
+        window.addEventListener('scroll', handleScroll, true);
+        // Cleanup
+        return () => window.removeEventListener('scroll', handleScroll, true);
+    }, []);
 
     return (
         <div class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10 w-full">
