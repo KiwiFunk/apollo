@@ -78,7 +78,7 @@ export default function HomePage() {
             </div>
 
             {/* Recently Updated Section */}
-            <div className="border-t border-gray-200 pt-12">
+            <div className="border-t border-gray-200 py-12">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-6">Recently Updated</h2>
                 <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                     {recentNotes.map((note) => (
