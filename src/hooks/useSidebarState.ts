@@ -1,35 +1,28 @@
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useRef } from 'preact/hooks';
+import { useStore } from '@nanostores/preact';
+import { $isSidebarOpen, closeSidebar } from '../stores/uiStore';
 
 export function useSidebarState() {
-  const [isOpen, setIsOpen] = useState(false);
+  // Subscribe to the global store
+  const isOpen = useStore($isSidebarOpen);
   const sidebarRef = useRef<HTMLElement | null>(null);
 
-  // Effect to listen for the global toggle event from the burger button
-  useEffect(() => {
-    const handleToggle = () => setIsOpen(prev => !prev);
-    window.addEventListener('toggle-sidebar', handleToggle);
-    return () => window.removeEventListener('toggle-sidebar', handleToggle);
-  }, []);
-
-  // Lock body scroll when sidebar is open on mobile
-  useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add('overflow-hidden', 'lg:overflow-auto');
-    } else {
-      document.body.classList.remove('overflow-hidden', 'lg:overflow-auto');
-    }
-  }, [isOpen]);
-
-  // Handler to close the sidebar when a link is clicked on mobile
-  // By using getComputedStyle instead of classList we can check only active styles
+  // Helper to close sidebar when clicking a link inside it
   const handleContentClick = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
+    // If clicking a link (<a>), close the sidebar
     if (target.closest('a')) {
+      // Only close if we are in mobile mode (fixed position)
       if (sidebarRef.current && window.getComputedStyle(sidebarRef.current).position === 'fixed') {
-        setIsOpen(false);
+        closeSidebar();
       }
     }
   };
 
-  return { isOpen, sidebarRef, handleContentClick, close: () => setIsOpen(false) };
+  return { 
+    isOpen, 
+    sidebarRef, 
+    handleContentClick, 
+    close: closeSidebar // Expose the store action directly
+  };
 }
