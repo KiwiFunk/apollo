@@ -99,14 +99,14 @@ const Delphi = forwardRef<DelphiRef, DelphiProps>(({ note }, ref) => {
                 {/* --- CONTENT BODY --- */}
                 <div className="grid mt-6 text-base font-mono leading-relaxed">
                     {/* Ghost Element to dictate height & prevent scroll jumps - Prevents DOM Manipulation */}
-                    <div className="invisible col-start-1 row-start-1 whitespace-pre-wrap wrap-break-words p-0 border-none" aria-hidden="true">
+                    <div className="invisible col-start-1 row-start-1 break-all whitespace-pre-wrap p-0 border-none" aria-hidden="true">
                         {content + '\n'}
                     </div>
 
                     {/* Actual Textarea: Overlays the ghost */}
                     <textarea 
                         ref={textareaRef}
-                        className="col-start-1 row-start-1 w-full h-full bg-transparent border-none p-0 focus:ring-0 resize-none outline-none overflow-hidden text-gray-800 placeholder-gray-400"
+                        className="col-start-1 row-start-1 w-full h-full bg-transparent border-none p-0 focus:ring-0 resize-none outline-none overflow-hidden text-gray-800 placeholder-gray-400 break-all whitespace-pre-wrap"
                         value={content}
                         onInput={(e) => setContent(e.currentTarget.value)}
                         spellcheck={false}
