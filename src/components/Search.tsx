@@ -115,7 +115,16 @@ export default function Search() {
       
       {/* Search Results Dropdown */}
       {query.length > 1 && (
-        <div class="absolute mt-2 w-full max-h-96 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg z-1000">
+        <div className={[
+          // Base styles (borders, background, shadow)
+          "bg-white border-gray-200 shadow-xl z-50 overflow-y-auto",
+          
+          // MOBILE STYLES (Fixed positioning, full width)
+          "fixed left-4 right-4 top-20 max-h-[60vh] rounded-xl border",
+          
+          // DESKTOP STYLES (Absolute positioning relative to input, standard dropdown)
+          "lg:absolute lg:left-0 lg:right-0 lg:top-full lg:mt-2 lg:max-h-160 lg:w-full lg:rounded-md"
+        ].join(' ')}>
           {results.length > 0 ? (
             <ul>
               {results.map(({ item }) => (
