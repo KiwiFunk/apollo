@@ -1,54 +1,57 @@
 import { useState } from 'preact/hooks';
-import clsx from 'clsx';
+import clsx from 'clsx';              // A tiny utility for combining class names conditionally
 
 // Define data structure for Labels
 type HardwareToggleProps = {
-  onChange?: (value: boolean) => void;
-  Labels: { on: string; off: string };
+  onChange?: (value: boolean) => void; // Optional callback to tell the parent "I changed!"
+  Labels: { on: string; off: string }; // Configurable text (e.g., "View" vs "Edit")
 }
 
 // Accept callback to handle mode change
 export default function HardwareToggle({ onChange, Labels }: HardwareToggleProps) {
 
-  // 'State' is a bool value that signals if the toggle is on or not
-  const [state, setState] = useState(false);
+  // 'isOn' is a bool value that signals if the toggle is on or not
+  const [isOn, setIsOn] = useState(false);
 
   const handleToggle = () => {
-    setState(prev => {
-      onChange?.(!prev);
-      return !prev;
-    });
+    const newState = !isOn; // new state = opposite of current state
+    setIsOn(newState);      // Update internal visual state
+    onChange?.(newState);   // Notify the parent component (if a handler exists)
   };
 
-
   return (
-    <div
+    <button
+      type="button"
       onClick={handleToggle}
-      class="relative inset-shadow-2xs aspect-[2.5/1] h-[60%] bg-gray-100 rounded p-1 cursor-pointer select-none overflow-hidden z-10"
+      className={clsx(
+        // Toggle Dimensions (Fixed Size)
+        "relative inline-flex h-8 w-20 shrink-0 cursor-pointer rounded border-2 border-transparent transition-colors duration-200 ease-in-out",
+        // Focus rings for keyboard accessibility (Tab key)
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2",
+        // Dynamic Background Color
+        isOn ? "bg-indigo-600" : "bg-gray-200"
+      )}
+      role="switch"
+      aria-checked={isOn}
     >
-      {/* Accent Fill */}
-      <div
-        class={clsx(
-          "absolute inset-0 rounded transition-colors duration-300",
-          state ? "bg-indigo-600" : "bg-transparent"
+      <span className="sr-only">Use setting</span>
+      
+      {/* Slider Knob */}
+      <span
+        aria-hidden="true"
+        className={clsx(
+          "pointer-events-none inline-block h-7 w-4 transform rounded bg-white shadow ring-0 transition duration-200 ease-in-out z-1000",
+          isOn ? "translate-x-15" : "translate-x-0"
         )}
       />
 
-      {/* Slider Wrapper */}
-      <div
-        class={clsx(
-          "absolute inset-0 flex items-center transition-all duration-300 px-0.5",
-          state ? "justify-end" : "justify-start"
-        )}
-      >
-        {/* Slider */}
-        <div class="bg-white rounded shadow-md w-[18%] h-[85%] z-1000" />
-      </div>
-
       {/* Label */}
-      <div class={clsx("absolute inset-0 flex items-center justify-center font-semibold tracking-wider pointer-events-none text-xs", state ? "text-white" : "text-gray-700")}>
-        {state ? Labels.on : Labels.off}
-      </div>
-    </div>
+      <span className={clsx(
+        "absolute inset-0 flex items-center justify-center text-[12px] font-semibold uppercase tracking-wider pointer-events-none transition-colors duration-200",
+        isOn ? "text-white" : "text-gray-500"
+      )}>
+        {isOn ? Labels.on : Labels.off}
+      </span>
+    </button>
   );
 }
