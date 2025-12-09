@@ -7,10 +7,8 @@
 
 /* Custom Utility Classes for Tailwind */
 @layer utilities {
-  @utility scrollbar-hidden {  
-    &::-webkit-scrollbar {
-      display: none;  
-    }
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
   }
-
 }
+
