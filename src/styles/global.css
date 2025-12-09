@@ -1,2 +1,16 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Utility Classes for Tailwind */
+@layer utilities {
+  @utility scrollbar-hidden {  
+    &::-webkit-scrollbar {
+      display: none;  
+    }
+  }
+
+}
