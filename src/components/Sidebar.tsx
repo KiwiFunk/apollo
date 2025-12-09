@@ -41,7 +41,7 @@ export default function Sidebar() {
         ref={sidebarRef}
         onClick={handleContentClick}
         className={[
-          "select-none w-72 bg-gray-50 border-r border-gray-200 p-6",
+          "select-none w-72 bg-gray-50 border-r border-gray-200 p-6 scrollbar-hidden",
           "h-svh transition-transform transform",
           "fixed lg:static z-20",
           "flex flex-col",          // Use flex to manage inner scrolling
