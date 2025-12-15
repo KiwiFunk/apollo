@@ -54,7 +54,7 @@ export default function Sidebar() {
         </div>
 
         {/* Inner Div for scrolling */}
-        <div class="overflow-y-auto mt-2">
+        <div class="overflow-y-auto mt-2 no-scrollbar">
           <ul class="space-y-1 pb-24 lg:pb-12">
             {sortedCategories.map(({ name, notes }) => (
               <CollapsibleContainer 
