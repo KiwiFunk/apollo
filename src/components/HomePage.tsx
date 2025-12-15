@@ -1,9 +1,9 @@
-import type { Note } from '../types';
+import type { NoteMeta } from '../types';
 import { useStore } from '@nanostores/preact';
 import { $notesStore } from '../stores/notesStore';
 
 // A reusable card component for our notes
-const NoteCard = ({ note }: { note: Note }) => (
+const NoteCard = ({ note }: { note: NoteMeta }) => (
     <a
         href={`/notes/${note.slug}`} // Use note.slug directly from the database object
         className="note-link block p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200"
