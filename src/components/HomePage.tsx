@@ -6,11 +6,11 @@ import { $notesStore } from '../stores/notesStore';
 const NoteCard = ({ note }: { note: NoteMeta }) => (
     <a
         href={`/notes/${note.slug}`} // Use note.slug directly from the database object
-        className="note-link block p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200"
+        className="flex flex-col note-link block px-6 py-5 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200"
     >
         <h3 className="text-xl font-semibold text-gray-900">{note.title}</h3>
-        <p className="mt-2 text-gray-600 line-clamp-3">{note.description}</p>
-        <span className="mt-4 inline-block text-sm font-medium text-indigo-600">Read more &rarr;</span>
+        <p className="mt-2 text-gray-600 line-clamp-3 flex-grow">{note.description}</p>
+        <span className="mt-3 inline-block text-sm font-medium text-indigo-600">Read more &rarr;</span>
     </a>
 );
 
